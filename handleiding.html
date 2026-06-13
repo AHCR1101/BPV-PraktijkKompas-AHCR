@@ -1,0 +1,1041 @@
+﻿<!doctype html>
+<html lang="nl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Handleiding BPV PraktijkKompas AHCR</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png" />
+    <meta name="theme-color" content="#f29400" />
+    <link rel="stylesheet" href="styles.css?v=20260612-format-download-bottom" />
+    <style>
+      .manual-hero {
+        position: relative;
+        overflow: hidden;
+        color: var(--white);
+        background:
+          linear-gradient(90deg, rgba(10, 98, 175, 0.94), rgba(10, 98, 175, 0.78)),
+          url("assets/kompas.jpg") center / cover;
+        border-bottom: 6px solid var(--orange);
+      }
+
+      .manual-hero-inner,
+      .manual-main,
+      .manual-footer-inner {
+        width: min(1120px, calc(100% - 40px));
+        margin: 0 auto;
+      }
+
+      .manual-hero-inner {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 24px;
+        align-items: center;
+        padding: 48px 0;
+      }
+
+      .manual-brand {
+        margin: 0 0 6px;
+        color: var(--white);
+        font-size: calc(1.6rem + 1vw);
+        font-weight: 900;
+        line-height: 1.15;
+        text-transform: uppercase;
+      }
+
+      .manual-brand span {
+        color: var(--blue-40);
+      }
+
+      .manual-hero h1 {
+        max-width: 860px;
+        margin: 10px 0 0;
+        color: var(--white);
+        font-size: clamp(32px, 5vw, 54px);
+        line-height: 1.03;
+      }
+
+      .manual-hero p {
+        max-width: 760px;
+        margin: 18px 0 0;
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 1.08rem;
+        line-height: 1.55;
+      }
+
+      .manual-hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 12px;
+        margin-top: 18px;
+      }
+
+      .manual-action-group {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .manual-language-switcher {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .manual-language-switcher .language-btn {
+        width: 40px;
+        height: 30px;
+      }
+
+      .manual-action-link {
+        display: inline-flex;
+        min-height: 44px;
+        align-items: center;
+        justify-content: center;
+        padding: 10px 14px;
+        color: var(--white);
+        background: var(--orange);
+        border: 1px solid var(--orange);
+        border-radius: 4px;
+        font-size: 0.92rem;
+        font-weight: 900;
+        text-decoration: none;
+        cursor: pointer;
+        transition: background 0.18s ease, border-color 0.18s ease, transform 0.18s ease;
+      }
+
+      .manual-action-link:hover,
+      .manual-action-link:focus-visible {
+        color: var(--white);
+        background: #d98200;
+        border-color: #d98200;
+        transform: translateY(-1px);
+      }
+
+      .manual-brand-label {
+        flex: 0 0 auto;
+        border-left: 4px solid var(--orange);
+        padding-left: 12px;
+      }
+
+      .manual-logo {
+        width: 118px;
+        padding: 10px;
+        background: rgba(255, 255, 255, 0.92);
+        border-radius: 4px;
+      }
+
+      .manual-main {
+        padding: 34px 0 56px;
+      }
+
+      .manual-panel {
+        padding: 24px;
+        background: var(--white);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        box-shadow: var(--shadow);
+      }
+
+      .manual-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 18px;
+      }
+
+      .manual-card {
+        position: relative;
+        min-height: 160px;
+        padding: 20px;
+        overflow: hidden;
+        background: var(--white);
+        border: 1px solid var(--line);
+        border-top: 4px solid var(--orange);
+        border-radius: 8px;
+        box-shadow: 0 12px 28px rgba(10, 98, 175, 0.08);
+      }
+
+      .manual-card strong,
+      .manual-step h3,
+      .manual-section h2 {
+        color: var(--blue);
+      }
+
+      .manual-card span {
+        display: inline-flex;
+        width: 34px;
+        height: 30px;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 12px;
+        color: var(--white);
+        background: var(--blue);
+        border-radius: 4px;
+        font-weight: 900;
+      }
+
+      .manual-card p,
+      .manual-step p,
+      .manual-callout p,
+      .manual-note li {
+        color: var(--muted);
+        line-height: 1.58;
+      }
+
+      .manual-section {
+        margin-top: 26px;
+      }
+
+      .manual-section h2 {
+        margin: 0 0 16px;
+        font-size: var(--section-title-size);
+      }
+
+      .manual-flow {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 14px;
+        counter-reset: route;
+      }
+
+      .manual-flow span {
+        position: relative;
+        display: grid;
+        grid-template-columns: 42px minmax(0, 1fr);
+        min-height: 76px;
+        align-items: center;
+        gap: 14px;
+        padding: 16px;
+        color: var(--blue);
+        background:
+          linear-gradient(90deg, rgba(10, 98, 175, 0.08), rgba(255, 255, 255, 0.96));
+        border: 1px solid rgba(10, 98, 175, 0.16);
+        border-left: 5px solid var(--orange);
+        border-radius: 6px;
+        font-weight: 900;
+        line-height: 1.25;
+      }
+
+      .manual-flow em {
+        display: inline-flex;
+        width: 38px;
+        height: 38px;
+        align-items: center;
+        justify-content: center;
+        color: var(--white);
+        background: var(--blue);
+        border-radius: 4px;
+        font-style: normal;
+        font-size: 0.9rem;
+      }
+
+      .manual-flow b {
+        min-width: 0;
+        overflow-wrap: anywhere;
+        font-size: 1rem;
+      }
+
+      .manual-steps {
+        display: grid;
+        gap: 16px;
+      }
+
+      .manual-step {
+        display: grid;
+        grid-template-columns: 64px minmax(0, 1fr);
+        gap: 16px;
+        align-items: start;
+        padding: 20px;
+        background: var(--white);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+      }
+
+      .manual-step-number {
+        display: inline-flex;
+        width: 48px;
+        height: 48px;
+        align-items: center;
+        justify-content: center;
+        color: var(--white);
+        background: var(--orange);
+        border-radius: 50%;
+        font-size: 1.05rem;
+        font-weight: 900;
+      }
+
+      .manual-step h3 {
+        margin: 0 0 8px;
+        font-size: 1.25rem;
+      }
+
+      .manual-step p {
+        margin: 0;
+      }
+
+      .manual-chip-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 12px;
+      }
+
+      .manual-chip-row span {
+        padding: 7px 10px;
+        color: var(--blue);
+        background: rgba(10, 98, 175, 0.07);
+        border: 1px solid rgba(10, 98, 175, 0.16);
+        border-radius: 999px;
+        font-size: 0.86rem;
+        font-weight: 800;
+      }
+
+      .manual-callout {
+        margin-top: 18px;
+        padding: 18px 20px;
+        background:
+          linear-gradient(90deg, rgba(10, 98, 175, 0.08), rgba(242, 148, 0, 0.08));
+        border: 1px solid rgba(10, 98, 175, 0.12);
+        border-left: 5px solid var(--orange);
+        border-radius: 8px;
+      }
+
+      .manual-callout h3 {
+        margin: 0 0 8px;
+        color: var(--blue);
+      }
+
+      .manual-two {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+      }
+
+      .manual-note {
+        margin: 0;
+        padding-left: 20px;
+      }
+
+      .manual-link-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 18px;
+      }
+
+      .manual-link-row a,
+      .manual-print {
+        display: inline-flex;
+        min-height: 44px;
+        align-items: center;
+        justify-content: center;
+        padding: 10px 14px;
+        color: var(--white);
+        background: var(--orange);
+        border: 1px solid var(--orange);
+        border-radius: 4px;
+        font-weight: 900;
+        text-decoration: none;
+        cursor: pointer;
+        transition: background 0.18s ease, border-color 0.18s ease, transform 0.18s ease;
+      }
+
+      .manual-link-row a:hover,
+      .manual-print:hover {
+        background: #d98200;
+        border-color: #d98200;
+        transform: translateY(-1px);
+      }
+
+      .manual-link-row a.secondary {
+        color: var(--blue);
+        background: var(--white);
+        border-color: var(--blue);
+      }
+
+      .manual-footer {
+        color: var(--white);
+        background: var(--blue);
+      }
+
+      .manual-footer-inner {
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+        padding: 24px 0;
+      }
+
+      .manual-footer p {
+        margin: 0;
+        line-height: 1.5;
+      }
+
+      @media (max-width: 920px) {
+        .manual-hero-inner,
+        .manual-two,
+        .manual-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .manual-flow {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .manual-logo {
+          justify-self: start;
+        }
+
+        .manual-brand-label {
+          justify-self: start;
+        }
+      }
+
+      @media (max-width: 620px) {
+        .manual-hero-inner,
+        .manual-main,
+        .manual-footer-inner {
+          width: min(100% - 28px, 1120px);
+        }
+
+        .manual-step {
+          grid-template-columns: 1fr;
+        }
+
+        .manual-hero-actions {
+          align-items: stretch;
+        }
+
+        .manual-action-group {
+          width: 100%;
+        }
+
+        .manual-action-link {
+          width: 100%;
+        }
+
+        .manual-language-switcher {
+          margin-left: auto;
+        }
+
+        .manual-flow {
+          grid-template-columns: 1fr;
+        }
+
+        .manual-footer-inner {
+          display: grid;
+        }
+      }
+
+      @media print {
+        @page {
+          size: A4;
+          margin: 16mm 14mm;
+        }
+
+        * {
+          box-shadow: none !important;
+          text-shadow: none !important;
+        }
+
+        html {
+          font-size: 10.5pt;
+        }
+
+        body {
+          color: #111;
+          background: white !important;
+        }
+
+        .manual-link-row,
+        .manual-print {
+          display: none;
+        }
+
+        .manual-hero {
+          color: #111;
+          background: white !important;
+          border-bottom: 2px solid var(--orange);
+        }
+
+        .manual-hero-inner,
+        .manual-main,
+        .manual-footer-inner {
+          width: 100%;
+        }
+
+        .manual-hero-inner {
+          display: grid;
+          grid-template-columns: minmax(0, 1fr) 58px;
+          gap: 14px;
+          align-items: start;
+          padding: 0 0 10mm;
+        }
+
+        .manual-brand,
+        .manual-brand span,
+        .manual-hero h1,
+        .manual-section h2,
+        .manual-card strong,
+        .manual-step h3 {
+          color: var(--blue) !important;
+        }
+
+        .manual-brand {
+          margin-bottom: 2mm;
+          font-size: 18pt;
+        }
+
+        .app-meta-subtitle {
+          color: #333 !important;
+        }
+
+        .manual-hero h1 {
+          max-width: none;
+          margin-top: 3mm;
+          font-size: 24pt;
+          line-height: 1.12;
+        }
+
+        .manual-hero p {
+          max-width: none;
+          margin-top: 4mm;
+          color: #333 !important;
+          font-size: 10.5pt;
+        }
+
+        .manual-logo {
+          width: 54px;
+          padding: 0;
+          background: transparent;
+        }
+
+        .manual-main {
+          padding: 8mm 0 0;
+        }
+
+        .manual-section {
+          margin-top: 9mm;
+        }
+
+        .manual-section,
+        .manual-panel,
+        .manual-card,
+        .manual-step,
+        .manual-callout,
+        .manual-two article {
+          break-inside: avoid;
+          page-break-inside: avoid;
+        }
+
+        .manual-panel {
+          padding: 0;
+          background: transparent;
+          border: 0;
+          border-radius: 0;
+        }
+
+        .manual-grid,
+        .manual-two,
+        .manual-flow,
+        .manual-steps {
+          display: block;
+        }
+
+        .manual-card,
+        .manual-step,
+        .manual-callout,
+        .manual-two article {
+          margin-top: 4mm;
+          padding: 0 0 4mm;
+          background: transparent !important;
+          border: 0;
+          border-bottom: 1px solid #d9e4ef;
+          border-radius: 0;
+        }
+
+        .manual-section:last-of-type {
+          margin-top: 6mm;
+        }
+
+        .manual-section:last-of-type .manual-card {
+          margin-top: 2mm;
+          padding-bottom: 2mm;
+        }
+
+        .manual-section:last-of-type .manual-card span {
+          margin-bottom: 1mm;
+        }
+
+        .manual-section:last-of-type .manual-card p {
+          margin: 1mm 0 0;
+          line-height: 1.32;
+        }
+
+        .manual-card span,
+        .manual-step-number,
+        .manual-flow em {
+          color: white !important;
+          background: var(--blue) !important;
+          -webkit-print-color-adjust: exact;
+          print-color-adjust: exact;
+        }
+
+        .manual-card span {
+          margin-bottom: 2mm;
+        }
+
+        .manual-flow span {
+          display: grid;
+          grid-template-columns: 28px minmax(0, 1fr);
+          min-height: auto;
+          gap: 8px;
+          margin-top: 2mm;
+          padding: 0 0 2mm;
+          background: transparent;
+          border: 0;
+        }
+
+        .manual-flow em {
+          width: 24px;
+          height: 24px;
+          font-size: 8.5pt;
+        }
+
+        .manual-flow b {
+          font-size: 10.5pt;
+          overflow-wrap: normal;
+        }
+
+        .manual-step {
+          display: grid;
+          grid-template-columns: 34px minmax(0, 1fr);
+          gap: 10px;
+        }
+
+        .manual-step-number {
+          width: 28px;
+          height: 28px;
+          font-size: 9pt;
+        }
+
+        .manual-step h3 {
+          margin-bottom: 2mm;
+          font-size: 12.5pt;
+        }
+
+        .manual-card p,
+        .manual-step p,
+        .manual-callout p,
+        .manual-note li {
+          color: #222;
+          line-height: 1.45;
+        }
+
+        .manual-chip-row {
+          display: block;
+          margin-top: 2mm;
+        }
+
+        .manual-chip-row span {
+          display: inline;
+          padding: 0;
+          color: #333;
+          background: transparent;
+          border: 0;
+          border-radius: 0;
+          font-weight: 700;
+        }
+
+        .manual-chip-row span + span::before {
+          content: " | ";
+          color: #777;
+          font-weight: 400;
+        }
+
+        .manual-footer {
+          margin-top: 10mm;
+          color: #111;
+          background: white !important;
+          border-top: 1px solid #d9e4ef;
+        }
+
+        .manual-footer-inner {
+          display: flex;
+          justify-content: space-between;
+          gap: 10mm;
+          padding: 5mm 0 0;
+          font-size: 9pt;
+        }
+
+        .manual-panel,
+        .manual-card,
+        .manual-step {
+          box-shadow: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="manual-hero">
+      <div class="manual-hero-inner">
+        <div>
+          <p class="manual-brand">Albeda <span>Horecacollege</span></p>
+          <p class="app-meta-subtitle">BPV PraktijkKompas AHCR</p>
+          <h1 data-i18n="heroTitle">Van Kwalificatiedossier Naar Opleidingsplan</h1>
+          <p data-i18n="heroIntro">Een praktische handleiding voor praktijkopleiders die met het PraktijkKompas een leeractiviteit, opdracht of taak willen vertalen naar een helder opleidingsplan.</p>
+          <div class="manual-hero-actions">
+            <div class="manual-action-group">
+              <a class="manual-action-link" href="index.html" data-i18n="backButton">Terug naar BPV PraktijkKompas AHCR</a>
+              <a class="manual-action-link" href="handleiding-bpv-praktijkkompas-ahcr.pdf" onclick="openHandleidingPdf(event)" data-i18n="pdfButton">Open Handleiding Als PDF</a>
+              <div class="manual-language-switcher" aria-label="Taal kiezen">
+                <button type="button" class="language-btn active" id="manual-lang-nl" aria-label="Nederlands" title="Nederlands" data-lang="nl">
+                  <img class="flag-icon" src="assets/vlag-ned.jpeg" alt="" />
+                </button>
+                <button type="button" class="language-btn" id="manual-lang-en" aria-label="English" title="English" data-lang="en">
+                  <img class="flag-icon" src="assets/vlag-eng.jpeg" alt="" />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="manual-brand-label">
+          <img class="manual-logo" src="assets/LOGO.jpg" alt="Albeda Horecacollege logo" />
+        </div>
+      </div>
+    </header>
+
+    <main class="manual-main">
+      <section class="manual-panel">
+        <p class="eyebrow" data-i18n="eyebrowShort">In het kort</p>
+        <h2 data-i18n="shortTitle">Waar helpt het PraktijkKompas bij?</h2>
+        <div class="manual-grid">
+          <article class="manual-card">
+            <span>01</span>
+            <strong data-i18n="card1Title">Richting kiezen</strong>
+            <p data-i18n="card1Text">Kies het juiste Kwalificatiedossier, Domein, opleiding en leerjaar. Zo werk je altijd vanuit de juiste context.</p>
+          </article>
+          <article class="manual-card">
+            <span>02</span>
+            <strong data-i18n="card2Title">Werkproces begrijpen</strong>
+            <p data-i18n="card2Text">Bekijk per werkproces de Omschrijving, het Resultaat en het Gedrag uit het Kwalificatiedossier.</p>
+          </article>
+          <article class="manual-card">
+            <span>03</span>
+            <strong data-i18n="card3Title">Activiteit maken</strong>
+            <p data-i18n="card3Text">Gebruik BPV PlanPro AHCR om een taak, opdracht of activiteit professioneel uit te werken in het juiste format.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="manual-section manual-panel">
+        <p class="eyebrow" data-i18n="eyebrowRoute">De route</p>
+        <h2 data-i18n="routeTitle">Van keuze naar opleidingsplan</h2>
+        <div class="manual-flow" aria-label="Route PraktijkKompas">
+          <span><em>1</em><b data-i18n="route1">Dossier kiezen</b></span>
+          <span><em>2</em><b data-i18n="route2">Domein</b></span>
+          <span><em>3</em><b data-i18n="route3">Opleiding</b></span>
+          <span><em>4</em><b data-i18n="route4">Leerjaar</b></span>
+          <span><em>5</em><b data-i18n="route5">Werkproces</b></span>
+          <span><em>6</em><b data-i18n="route6">AI uitwerking</b></span>
+          <span><em>7</em><b data-i18n="route7">Opleidingsplan</b></span>
+        </div>
+        <div class="manual-callout">
+          <h3 data-i18n="importantTitle">Belangrijk</h3>
+          <p data-i18n="importantText">Controleer altijd of je werkt met het juiste Kwalificatiedossier: Oud of Nieuw. Die keuze bepaalt welke opleidingen, kerntaken, profieldelen en werkprocessen zichtbaar worden.</p>
+        </div>
+      </section>
+
+      <section class="manual-section">
+        <h2 data-i18n="stepsTitle">Stap voor stap</h2>
+        <div class="manual-steps">
+          <article class="manual-step">
+            <span class="manual-step-number">1</span>
+            <div>
+              <h3 data-i18n="step1Title">Kies Oud of Nieuw Kwalificatiedossier</h3>
+              <p data-i18n="step1Text">Start op de landingspagina met het juiste Kwalificatiedossier. Werk je met een lopend cohort of een bestaand BPV-traject, controleer dan goed of het oude dossier van toepassing is.</p>
+              <div class="manual-chip-row"><span data-i18n="chipNew">Nieuw Kwalificatiedossier</span><span data-i18n="chipOld">Oud Kwalificatiedossier</span></div>
+            </div>
+          </article>
+
+          <article class="manual-step">
+            <span class="manual-step-number">2</span>
+            <div>
+              <h3 data-i18n="step2Title">Kies het Domein</h3>
+              <p data-i18n="step2Text">Selecteer het Domein waar de opleiding onder valt. De webapp toont daarna de opleidingen die bij dat Domein en Kwalificatiedossier horen.</p>
+              <div class="manual-chip-row"><span data-i18n="domainKitchen">Keuken</span><span data-i18n="domainService">Bediening</span><span data-i18n="domainManagement">Management</span></div>
+            </div>
+          </article>
+
+          <article class="manual-step">
+            <span class="manual-step-number">3</span>
+            <div>
+              <h3 data-i18n="step3Title">Selecteer opleiding en leerjaar</h3>
+              <p data-i18n="step3Text">Kies de opleiding van de student en het juiste leerjaar. Het niveau wordt automatisch gekoppeld aan het leerjaar.</p>
+              <div class="manual-chip-row"><span data-i18n="year1">Leerjaar 1 - Basis</span><span data-i18n="year2">Leerjaar 2 - Gevorderd</span><span data-i18n="year34">Leerjaar 3/4 - Expert</span></div>
+            </div>
+          </article>
+
+          <article class="manual-step">
+            <span class="manual-step-number">4</span>
+            <div>
+              <h3 data-i18n="step4Title">Bekijk Basisdeel en Profieldeel</h3>
+              <p data-i18n="step4Text">Het Basisdeel is standaard zichtbaar. Vanaf leerjaar 2 kun je, waar van toepassing, ook het Profieldeel openen. Hier zie je de kerntaken en werkprocessen die bij de opleiding horen.</p>
+            </div>
+          </article>
+
+          <article class="manual-step">
+            <span class="manual-step-number">5</span>
+            <div>
+              <h3 data-i18n="step5Title">Open een werkproces</h3>
+              <p data-i18n="step5Text">Klik op het pijltje bij een werkproces. Je ziet dan de Omschrijving, het Resultaat en het Gedrag. Deze informatie vormt de inhoudelijke basis voor een passende taak, opdracht of activiteit.</p>
+            </div>
+          </article>
+
+          <article class="manual-step">
+            <span class="manual-step-number">6</span>
+            <div>
+              <h3 data-i18n="step6Title">Werk een activiteit uit met AI</h3>
+              <p data-i18n="step6Text">Beschrijf kort wat de student gaat doen. Je kunt werken vanuit het gekozen werkproces of kiezen voor een vrije activiteit. Bij een vrije activiteit doet BPV PlanPro AHCR alleen voorstellen voor passende kerntaken en werkprocessen. De praktijkopleider controleert die koppeling altijd zelf.</p>
+            </div>
+          </article>
+
+          <article class="manual-step">
+            <span class="manual-step-number">7</span>
+            <div>
+              <h3 data-i18n="step7Title">Gebruik de uitwerking in het opleidingsplan</h3>
+              <p data-i18n="step7Text">BPV PlanPro AHCR toont eerst een overzicht onder elkaar en vraagt daarna: "Ben je content met deze uitwerking?" Bij Ja volgt een tabel en worden Excel en Word als download aangeboden.</p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="manual-section manual-two">
+        <article class="manual-panel">
+          <p class="eyebrow" data-i18n="eyebrowAi">AI-route</p>
+          <h2 data-i18n="aiFixedTitle">Vanuit gekozen werkproces</h2>
+          <ul class="manual-note">
+            <li data-i18n="aiFixed1">Gebruik deze route wanneer de activiteit duidelijk bij het geopende werkproces hoort.</li>
+            <li data-i18n="aiFixed2">De prompt neemt automatisch opleiding, leerjaar, niveau, kerntaak en werkproces mee.</li>
+            <li data-i18n="aiFixed3">De uitwerking moet aansluiten op Omschrijving, Resultaat en Gedrag.</li>
+          </ul>
+        </article>
+
+        <article class="manual-panel">
+          <p class="eyebrow" data-i18n="eyebrowAi">AI-route</p>
+          <h2 data-i18n="aiFreeTitle">Vrije activiteit</h2>
+          <ul class="manual-note">
+            <li data-i18n="aiFree1">Gebruik deze route wanneer je als praktijkopleider zelf een activiteit wilt bepalen.</li>
+            <li data-i18n="aiFree2">De AI mag passende kerntaken en werkprocessen voorstellen.</li>
+            <li data-i18n="aiFree3">Die koppeling blijft een voorstel en moet altijd worden gecontroleerd.</li>
+          </ul>
+        </article>
+      </section>
+
+      <section class="manual-section manual-panel">
+        <p class="eyebrow" data-i18n="eyebrowCheck">Praktische controle</p>
+        <h2 data-i18n="checkTitle">Waar let je op voordat je iets opneemt in het opleidingsplan?</h2>
+        <div class="manual-grid">
+          <article class="manual-card">
+            <span>A</span>
+            <strong data-i18n="check1Title">Klopt de context?</strong>
+            <p data-i18n="check1Text">Controleer Oud/Nieuw Kwalificatiedossier, opleiding, leerjaar en niveau.</p>
+          </article>
+          <article class="manual-card">
+            <span>B</span>
+            <strong data-i18n="check2Title">Past het niveau?</strong>
+            <p data-i18n="check2Text">Basis is begeleid oefenen, Gevorderd is zelfstandiger uitvoeren, Expert is zelfstandig en kwaliteitsgericht werken.</p>
+          </article>
+          <article class="manual-card">
+            <span>C</span>
+            <strong data-i18n="check3Title">Is het concreet?</strong>
+            <p data-i18n="check3Text">Een goede activiteit maakt duidelijk wanneer, wat, hoe, met wie en waaraan succes wordt herkend.</p>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <footer class="manual-footer">
+      <div class="manual-footer-inner">
+        <p><strong>Albeda Horecacollege Rotterdam</strong><br />Cees van den Heuvel | BPV Coördinator</p>
+        <p data-i18n="copyright">&copy; 2026 Cees van den Heuvel. Alle rechten voorbehouden.</p>
+      </div>
+    </footer>
+    <script>
+      const manualLanguageButtons = document.querySelectorAll(".manual-language-switcher .language-btn");
+      const savedManualLanguage = localStorage.getItem("bpvManualLanguage") || "nl";
+
+      const manualTranslations = {
+        nl: {
+          heroTitle: "Van Kwalificatiedossier Naar Opleidingsplan",
+          heroIntro: "Een praktische handleiding voor praktijkopleiders die met het PraktijkKompas een leeractiviteit, opdracht of taak willen vertalen naar een helder opleidingsplan.",
+          backButton: "Terug naar BPV PraktijkKompas AHCR",
+          pdfButton: "Open Handleiding Als PDF",
+          eyebrowShort: "In het kort",
+          shortTitle: "Waar helpt het PraktijkKompas bij?",
+          card1Title: "Richting kiezen",
+          card1Text: "Kies het juiste Kwalificatiedossier, Domein, opleiding en leerjaar. Zo werk je altijd vanuit de juiste context.",
+          card2Title: "Werkproces begrijpen",
+          card2Text: "Bekijk per werkproces de Omschrijving, het Resultaat en het Gedrag uit het Kwalificatiedossier.",
+          card3Title: "Activiteit maken",
+          card3Text: "Gebruik BPV PlanPro AHCR om een taak, opdracht of activiteit professioneel uit te werken in het juiste format.",
+          eyebrowRoute: "De route",
+          routeTitle: "Van keuze naar opleidingsplan",
+          route1: "Dossier kiezen",
+          route2: "Domein",
+          route3: "Opleiding",
+          route4: "Leerjaar",
+          route5: "Werkproces",
+          route6: "AI uitwerking",
+          route7: "Opleidingsplan",
+          importantTitle: "Belangrijk",
+          importantText: "Controleer altijd of je werkt met het juiste Kwalificatiedossier: Oud of Nieuw. Die keuze bepaalt welke opleidingen, kerntaken, profieldelen en werkprocessen zichtbaar worden.",
+          stepsTitle: "Stap voor stap",
+          step1Title: "Kies Oud of Nieuw Kwalificatiedossier",
+          step1Text: "Start op de landingspagina met het juiste Kwalificatiedossier. Werk je met een lopend cohort of een bestaand BPV-traject, controleer dan goed of het oude dossier van toepassing is.",
+          chipNew: "Nieuw Kwalificatiedossier",
+          chipOld: "Oud Kwalificatiedossier",
+          step2Title: "Kies het Domein",
+          step2Text: "Selecteer het Domein waar de opleiding onder valt. De webapp toont daarna de opleidingen die bij dat Domein en Kwalificatiedossier horen.",
+          domainKitchen: "Keuken",
+          domainService: "Bediening",
+          domainManagement: "Management",
+          step3Title: "Selecteer opleiding en leerjaar",
+          step3Text: "Kies de opleiding van de student en het juiste leerjaar. Het niveau wordt automatisch gekoppeld aan het leerjaar.",
+          year1: "Leerjaar 1 - Basis",
+          year2: "Leerjaar 2 - Gevorderd",
+          year34: "Leerjaar 3/4 - Expert",
+          step4Title: "Bekijk Basisdeel en Profieldeel",
+          step4Text: "Het Basisdeel is standaard zichtbaar. Vanaf leerjaar 2 kun je, waar van toepassing, ook het Profieldeel openen. Hier zie je de kerntaken en werkprocessen die bij de opleiding horen.",
+          step5Title: "Open een werkproces",
+          step5Text: "Klik op het pijltje bij een werkproces. Je ziet dan de Omschrijving, het Resultaat en het Gedrag. Deze informatie vormt de inhoudelijke basis voor een passende taak, opdracht of activiteit.",
+          step6Title: "Werk een activiteit uit met AI",
+          step6Text: "Beschrijf kort wat de student gaat doen. Je kunt werken vanuit het gekozen werkproces of kiezen voor een vrije activiteit. Bij een vrije activiteit doet BPV PlanPro AHCR alleen voorstellen voor passende kerntaken en werkprocessen. De praktijkopleider controleert die koppeling altijd zelf.",
+          step7Title: "Gebruik de uitwerking in het opleidingsplan",
+          step7Text: "BPV PlanPro AHCR toont eerst een overzicht onder elkaar en vraagt daarna: “Ben je content met deze uitwerking?” Bij Ja volgt een tabel en worden Excel en Word als download aangeboden.",
+          eyebrowAi: "AI-route",
+          aiFixedTitle: "Vanuit gekozen werkproces",
+          aiFixed1: "Gebruik deze route wanneer de activiteit duidelijk bij het geopende werkproces hoort.",
+          aiFixed2: "De prompt neemt automatisch opleiding, leerjaar, niveau, kerntaak en werkproces mee.",
+          aiFixed3: "De uitwerking moet aansluiten op Omschrijving, Resultaat en Gedrag.",
+          aiFreeTitle: "Vrije activiteit",
+          aiFree1: "Gebruik deze route wanneer je als praktijkopleider zelf een activiteit wilt bepalen.",
+          aiFree2: "De AI mag passende kerntaken en werkprocessen voorstellen.",
+          aiFree3: "Die koppeling blijft een voorstel en moet altijd worden gecontroleerd.",
+          eyebrowCheck: "Praktische controle",
+          checkTitle: "Waar let je op voordat je iets opneemt in het opleidingsplan?",
+          check1Title: "Klopt de context?",
+          check1Text: "Controleer Oud/Nieuw Kwalificatiedossier, opleiding, leerjaar en niveau.",
+          check2Title: "Past het niveau?",
+          check2Text: "Basis is begeleid oefenen, Gevorderd is zelfstandiger uitvoeren, Expert is zelfstandig en kwaliteitsgericht werken.",
+          check3Title: "Is het concreet?",
+          check3Text: "Een goede activiteit maakt duidelijk wanneer, wat, hoe, met wie en waaraan succes wordt herkend.",
+          copyright: "? 2026 Cees van den Heuvel. Alle rechten voorbehouden."
+        },
+        en: {
+          heroTitle: "From Qualification File To Training Plan",
+          heroIntro: "A practical guide for workplace trainers who want to use PraktijkKompas to translate a learning activity, assignment or task into a clear training plan.",
+          backButton: "Back to BPV PraktijkKompas AHCR",
+          pdfButton: "Open Guide As PDF",
+          eyebrowShort: "In brief",
+          shortTitle: "How does PraktijkKompas help?",
+          card1Title: "Choose direction",
+          card1Text: "Choose the correct Qualification File, Domain, programme and study year. This keeps you working from the right context.",
+          card2Title: "Understand the work process",
+          card2Text: "View the Description, Result and Behaviour for each work process from the Qualification File.",
+          card3Title: "Create an activity",
+          card3Text: "Use BPV PlanPro AHCR to professionally develop a task, assignment or activity in the correct format.",
+          eyebrowRoute: "The route",
+          routeTitle: "From choice to training plan",
+          route1: "Choose file",
+          route2: "Domain",
+          route3: "Programme",
+          route4: "Study year",
+          route5: "Work process",
+          route6: "AI draft",
+          route7: "Training plan",
+          importantTitle: "Important",
+          importantText: "Always check whether you are working with the correct Qualification File: Old or New. That choice determines which programmes, core tasks, profile sections and work processes are shown.",
+          stepsTitle: "Step by step",
+          step1Title: "Choose Old or New Qualification File",
+          step1Text: "Start on the landing page with the correct Qualification File. If you are working with an ongoing cohort or existing BPV pathway, carefully check whether the old file applies.",
+          chipNew: "New Qualification File",
+          chipOld: "Old Qualification File",
+          step2Title: "Choose the Domain",
+          step2Text: "Select the Domain the programme belongs to. The web app then shows the programmes connected to that Domain and Qualification File.",
+          domainKitchen: "Kitchen",
+          domainService: "Service",
+          domainManagement: "Management",
+          step3Title: "Select programme and study year",
+          step3Text: "Choose the student's programme and the correct study year. The level is automatically linked to the study year.",
+          year1: "Year 1 - Basic",
+          year2: "Year 2 - Advanced",
+          year34: "Year 3/4 - Expert",
+          step4Title: "View Basic and Profile sections",
+          step4Text: "The Basic section is visible by default. From year 2 onward, where applicable, you can also open the Profile section. This shows the core tasks and work processes that belong to the programme.",
+          step5Title: "Open a work process",
+          step5Text: "Click the arrow next to a work process. You will see the Description, Result and Behaviour. This information forms the content basis for a suitable task, assignment or activity.",
+          step6Title: "Develop an activity with AI",
+          step6Text: "Briefly describe what the student will do. You can work from the selected work process or choose a free activity. For a free activity, BPV PlanPro AHCR only suggests suitable core tasks and work processes. The workplace trainer always checks that link.",
+          step7Title: "Use the draft in the training plan",
+          step7Text: "BPV PlanPro AHCR first shows an overview and then asks: “Are you happy with this draft?” If yes, a table follows and Excel and Word are offered as downloads.",
+          eyebrowAi: "AI route",
+          aiFixedTitle: "From selected work process",
+          aiFixed1: "Use this route when the activity clearly belongs to the opened work process.",
+          aiFixed2: "The prompt automatically includes programme, study year, level, core task and work process.",
+          aiFixed3: "The draft must connect to Description, Result and Behaviour.",
+          aiFreeTitle: "Free activity",
+          aiFree1: "Use this route when you as workplace trainer want to define the activity yourself.",
+          aiFree2: "The AI may suggest suitable core tasks and work processes.",
+          aiFree3: "That link remains a suggestion and must always be checked.",
+          eyebrowCheck: "Practical check",
+          checkTitle: "What do you check before adding something to the training plan?",
+          check1Title: "Is the context correct?",
+          check1Text: "Check Old/New Qualification File, programme, study year and level.",
+          check2Title: "Does the level fit?",
+          check2Text: "Basic means guided practice, Advanced means more independent performance, Expert means independent and quality-focused work.",
+          check3Title: "Is it concrete?",
+          check3Text: "A good activity makes clear when, what, how, with whom and how success will be recognised.",
+          copyright: "? 2026 Cees van den Heuvel. All rights reserved."
+        }
+      };
+
+      function setManualLanguage(lang) {
+        const activeLanguage = manualTranslations[lang] ? lang : "nl";
+        document.documentElement.lang = activeLanguage;
+        localStorage.setItem("bpvManualLanguage", activeLanguage);
+        document.querySelectorAll("[data-i18n]").forEach((element) => {
+          const key = element.dataset.i18n;
+          const value = manualTranslations[activeLanguage][key];
+          if (value) element.textContent = value;
+        });
+        manualLanguageButtons.forEach((button) => {
+          button.classList.toggle("active", button.dataset.lang === activeLanguage);
+        });
+      }
+
+      manualLanguageButtons.forEach((button) => {
+        button.addEventListener("click", () => setManualLanguage(button.dataset.lang));
+      });
+
+      setManualLanguage(savedManualLanguage);
+
+      function openHandleidingPdf(event) {
+        event.preventDefault();
+        const popup = window.open(
+          "handleiding-bpv-praktijkkompas-ahcr.pdf",
+          "handleidingPdf",
+          "popup=yes,width=760,height=860,left=120,top=60,menubar=no,toolbar=no,location=no,status=no,scrollbars=yes,resizable=yes"
+        );
+        if (!popup) {
+          window.open("handleiding-bpv-praktijkkompas-ahcr.pdf", "_blank", "noopener");
+        }
+      }
+    </script>
+  </body>
+</html>
+
+
+
