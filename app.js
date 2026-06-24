@@ -4300,12 +4300,15 @@ translatePage(currentLanguage);
 
 function initDevicePopup() {
   const popup = document.querySelector("#devicePopup");
-  if (!popup || localStorage.getItem("bpvDevicePopupDismissed") === "true") return;
+  if (!popup) return;
+
+  let dismissedDuringThisVisit = false;
+  localStorage.removeItem("bpvDevicePopupDismissed");
 
   const closePopup = () => {
+    dismissedDuringThisVisit = true;
     popup.classList.remove("is-visible");
     popup.setAttribute("aria-hidden", "true");
-    localStorage.setItem("bpvDevicePopupDismissed", "true");
   };
 
   popup.querySelectorAll("[data-device-popup-close]").forEach((element) => {
@@ -4317,7 +4320,7 @@ function initDevicePopup() {
   });
 
   window.setTimeout(() => {
-    if (localStorage.getItem("bpvDevicePopupDismissed") === "true") return;
+    if (dismissedDuringThisVisit) return;
     popup.classList.add("is-visible");
     popup.setAttribute("aria-hidden", "false");
   }, 3000);
