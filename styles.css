@@ -1,4 +1,4 @@
-:root {
+﻿:root {
   --blue: #0a62af;
   --blue-70: #478ac1;
   --blue-40: #85c9f0;
@@ -3338,4 +3338,686 @@ footer {
   .device-popup-action {
     width: 100%;
   }
+}
+
+/* BPV Info hoofdtabbladen en documentoverzicht */
+.primary-tabs-shell {
+  background: #ffffff;
+  border-bottom: 1px solid var(--line);
+  box-shadow: 0 10px 24px rgba(10, 98, 175, 0.06);
+}
+
+.primary-tabs {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 14px 20px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.primary-tab {
+  min-height: 44px;
+  padding: 10px 16px;
+  border: 1px solid rgba(242, 148, 0, 0.45);
+  border-radius: 4px;
+  background: #ffffff;
+  color: var(--blue);
+  font-weight: 900;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.primary-tab:hover,
+.primary-tab:focus-visible {
+  border-color: var(--orange);
+  transform: translateY(-1px);
+  box-shadow: 0 10px 24px rgba(242, 148, 0, 0.16);
+}
+
+.primary-tab.is-active {
+  background: var(--orange);
+  border-color: var(--orange);
+  color: var(--white);
+  box-shadow: 0 12px 28px rgba(242, 148, 0, 0.22);
+}
+
+.bpv-info-view {
+  padding-top: 30px;
+  padding-bottom: 36px;
+}
+
+.bpv-info-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 24px;
+  align-items: center;
+  padding: 25px;
+  margin-bottom: 24px;
+  background:
+    linear-gradient(115deg, rgba(255,255,255,0.95), rgba(255,255,255,0.82)),
+    radial-gradient(circle at top right, rgba(133, 201, 240, 0.35), transparent 34%);
+}
+
+.bpv-info-hero h2,
+.bpv-info-toolbar h3,
+.bpv-info-list-panel h3,
+.bpv-info-preview h3 {
+  margin: 0;
+  color: var(--blue);
+  font-size: 24px;
+  line-height: 1.15;
+}
+
+.bpv-info-hero p:not(.eyebrow),
+.bpv-info-preview p,
+.bpv-info-card p {
+  margin: 9px 0 0;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.bpv-info-stat {
+  min-width: 128px;
+  padding: 16px;
+  border-radius: 4px;
+  background: var(--blue);
+  color: var(--white);
+  text-align: center;
+  box-shadow: 0 16px 35px rgba(10, 98, 175, 0.2);
+}
+
+.bpv-info-stat strong {
+  display: block;
+  font-size: 36px;
+  line-height: 1;
+}
+
+.bpv-info-stat span {
+  display: block;
+  margin-top: 4px;
+  font-weight: 800;
+}
+
+.bpv-info-dashboard {
+  display: grid;
+  gap: 18px;
+}
+
+.bpv-info-toolbar,
+.bpv-info-list-panel,
+.bpv-info-preview {
+  padding: 20px;
+}
+
+.bpv-info-toolbar {
+  display: grid;
+  gap: 16px;
+}
+
+.bpv-info-controls {
+  display: grid;
+  grid-template-columns: minmax(220px, 1fr) minmax(190px, 0.45fr) minmax(260px, 0.75fr);
+  gap: 12px;
+}
+
+.info-field {
+  display: grid;
+  gap: 7px;
+  color: var(--blue);
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.info-field input,
+.info-field select {
+  width: 100%;
+  min-height: 44px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: #ffffff;
+  color: var(--ink);
+  padding: 10px 12px;
+  font: inherit;
+  box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+
+.info-field input:focus,
+.info-field select:focus {
+  outline: 2px solid rgba(242, 148, 0, 0.35);
+  border-color: var(--orange);
+}
+
+.bpv-info-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(330px, 0.45fr);
+  gap: 18px;
+  align-items: start;
+}
+
+.bpv-info-results-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.bpv-info-count {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  padding: 6px 10px;
+  border-radius: 4px;
+  background: rgba(10, 98, 175, 0.08);
+  color: var(--blue);
+  font-size: 13px;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.bpv-info-list {
+  display: grid;
+  gap: 10px;
+  max-height: 720px;
+  overflow: auto;
+  padding-right: 4px;
+}
+
+.bpv-info-card {
+  display: grid;
+  grid-template-columns: 52px minmax(0, 1fr) 24px;
+  gap: 12px;
+  align-items: center;
+  padding: 13px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.9);
+  cursor: pointer;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease, background 0.2s ease;
+}
+
+.bpv-info-card:hover,
+.bpv-info-card:focus-visible,
+.bpv-info-card.is-selected {
+  border-color: rgba(242, 148, 0, 0.72);
+  background: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 12px 28px rgba(10, 98, 175, 0.12);
+  outline: none;
+}
+
+.bpv-info-file-icon {
+  display: inline-flex;
+  width: 52px;
+  height: 52px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  background: var(--blue);
+  color: var(--white);
+  font-size: 12px;
+  font-weight: 900;
+  border-bottom: 4px solid var(--orange);
+}
+
+.bpv-info-card-main {
+  min-width: 0;
+}
+
+.bpv-info-card h4 {
+  margin: 0;
+  color: var(--blue);
+  font-size: 16px;
+  line-height: 1.25;
+}
+
+.bpv-info-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 9px;
+}
+
+.bpv-info-tags span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  background: rgba(10, 98, 175, 0.08);
+  color: var(--blue);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.bpv-info-arrow {
+  color: var(--orange);
+  font-size: 28px;
+  line-height: 1;
+  font-weight: 900;
+}
+
+.bpv-info-preview {
+  position: sticky;
+  top: 16px;
+}
+
+.bpv-info-preview-frame {
+  min-height: 330px;
+  margin-top: 16px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  overflow: hidden;
+  background: #f8fafc;
+}
+
+.bpv-info-preview-frame iframe,
+.bpv-info-preview-frame img,
+.bpv-info-preview-frame video {
+  display: block;
+  width: 100%;
+  height: 420px;
+  border: 0;
+  object-fit: contain;
+  background: #ffffff;
+}
+
+.bpv-info-preview-empty,
+.bpv-info-empty {
+  display: grid;
+  min-height: 220px;
+  place-items: center;
+  padding: 22px;
+  color: var(--muted);
+  text-align: center;
+}
+
+.bpv-info-preview-empty strong {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 72px;
+  min-height: 44px;
+  padding: 8px 12px;
+  border-radius: 4px;
+  background: var(--blue);
+  color: var(--white);
+  border-bottom: 4px solid var(--orange);
+}
+
+.bpv-info-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.bpv-info-action {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 12px;
+  border: 1px solid var(--orange);
+  border-radius: 4px;
+  color: var(--blue);
+  background: #ffffff;
+  font-weight: 900;
+  text-decoration: none;
+  text-align: center;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.bpv-info-action.primary,
+.bpv-info-action:hover,
+.bpv-info-action:focus-visible {
+  background: var(--orange);
+  color: var(--white);
+  transform: translateY(-1px);
+  box-shadow: 0 12px 24px rgba(242, 148, 0, 0.22);
+}
+
+@media (max-width: 900px) {
+  .primary-tabs,
+  .bpv-info-controls,
+  .bpv-info-layout,
+  .bpv-info-hero {
+    grid-template-columns: 1fr;
+  }
+
+  .primary-tabs {
+    align-items: stretch;
+  }
+
+  .primary-tab {
+    flex: 1 1 0;
+  }
+
+  .bpv-info-preview {
+    position: static;
+  }
+}
+
+@media (max-width: 620px) {
+  .primary-tabs {
+    flex-direction: column;
+  }
+
+  .bpv-info-card {
+    grid-template-columns: 46px minmax(0, 1fr);
+  }
+
+  .bpv-info-arrow {
+    display: none;
+  }
+
+  .bpv-info-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .bpv-info-preview-frame iframe,
+  .bpv-info-preview-frame img,
+  .bpv-info-preview-frame video {
+    height: 320px;
+  }
+}
+
+
+/* Correctie BPV Info: panelen onder elkaar en rustige filtervelden */
+.bpv-info-layout {
+  grid-template-columns: 1fr !important;
+  align-items: stretch !important;
+}
+
+.bpv-info-preview {
+  position: static !important;
+  top: auto !important;
+}
+
+.bpv-info-controls {
+  grid-template-columns: minmax(220px, 0.85fr) minmax(320px, 1.15fr) !important;
+  align-items: end;
+}
+
+.bpv-info-controls .info-field:first-child {
+  grid-column: 1 / -1;
+}
+
+.info-field {
+  font-weight: 400 !important;
+}
+
+.info-field span {
+  color: var(--blue);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.info-field input,
+.info-field select {
+  min-height: 48px;
+  padding: 10px 40px 10px 12px;
+  font-size: 14px;
+  font-weight: 400 !important;
+  line-height: 1.35;
+}
+
+.bpv-info-list {
+  max-height: 500px !important;
+}
+
+@media (max-width: 760px) {
+  .bpv-info-controls {
+    grid-template-columns: 1fr !important;
+  }
+
+  .bpv-info-controls .info-field:first-child {
+    grid-column: auto;
+  }
+}
+
+/* Correctie BPV Info: preview direct zichtbaar, resultaten eronder */
+.bpv-info-preview {
+  order: 1;
+}
+
+.bpv-info-list-panel {
+  order: 2;
+}
+
+.bpv-info-preview-frame {
+  min-height: clamp(520px, 72vh, 820px) !important;
+}
+
+.bpv-info-preview-frame iframe,
+.bpv-info-preview-frame img,
+.bpv-info-preview-frame video {
+  height: clamp(520px, 72vh, 820px) !important;
+}
+
+.bpv-info-actions {
+  grid-template-columns: minmax(220px, 320px) !important;
+  justify-content: start;
+}
+
+.bpv-info-action {
+  width: 100%;
+}
+
+@media (max-width: 760px) {
+  .bpv-info-preview-frame,
+  .bpv-info-preview-frame iframe,
+  .bpv-info-preview-frame img,
+  .bpv-info-preview-frame video {
+    min-height: 62vh !important;
+    height: 62vh !important;
+  }
+}
+
+/* Correctie BPV Info: resetknop en maximaal previewvenster */
+.bpv-info-controls {
+  grid-template-columns: minmax(220px, 0.75fr) minmax(320px, 1.1fr) auto !important;
+}
+
+.bpv-info-reset {
+  min-height: 48px;
+  align-self: end;
+  padding: 10px 16px;
+  border: 1px solid var(--orange);
+  border-radius: 4px;
+  background: var(--orange);
+  color: var(--white);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 10px 22px rgba(242, 148, 0, 0.18);
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  white-space: nowrap;
+}
+
+.bpv-info-reset:hover,
+.bpv-info-reset:focus-visible {
+  background: #d98200;
+  border-color: #d98200;
+  transform: translateY(-1px);
+  box-shadow: 0 14px 28px rgba(242, 148, 0, 0.25);
+}
+
+.bpv-info-preview {
+  padding: 16px !important;
+}
+
+.bpv-info-preview-frame {
+  min-height: calc(100vh - 260px) !important;
+  margin-top: 12px !important;
+}
+
+.bpv-info-preview-frame iframe,
+.bpv-info-preview-frame img,
+.bpv-info-preview-frame video {
+  height: calc(100vh - 260px) !important;
+  min-height: 680px !important;
+}
+
+@media (max-width: 760px) {
+  .bpv-info-controls {
+    grid-template-columns: 1fr !important;
+  }
+
+  .bpv-info-reset {
+    width: 100%;
+  }
+
+  .bpv-info-preview-frame,
+  .bpv-info-preview-frame iframe,
+  .bpv-info-preview-frame img,
+  .bpv-info-preview-frame video {
+    min-height: 68vh !important;
+    height: 68vh !important;
+  }
+}
+
+/* Correctie BPV Info: preview bijna volledige browserbreedte */
+#bpvInfoView {
+  max-width: none !important;
+  padding-left: 20px !important;
+  padding-right: 20px !important;
+}
+
+.bpv-info-hero,
+.bpv-info-toolbar,
+.bpv-info-list-panel {
+  width: min(1100px, calc(100vw - 40px));
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.bpv-info-preview {
+  width: calc(100vw - 40px) !important;
+  max-width: none !important;
+  margin-left: calc(50% - 50vw + 20px) !important;
+  margin-right: calc(50% - 50vw + 20px) !important;
+  padding: 10px !important;
+  border-left-width: 4px !important;
+}
+
+.bpv-info-preview-head {
+  width: min(1100px, 100%);
+  margin: 0 auto 8px;
+}
+
+.bpv-info-preview-frame {
+  width: 100% !important;
+  min-height: calc(100vh - 210px) !important;
+  margin-top: 8px !important;
+  border-radius: 2px !important;
+}
+
+.bpv-info-preview-frame iframe,
+.bpv-info-preview-frame img,
+.bpv-info-preview-frame video {
+  width: 100% !important;
+  height: calc(100vh - 210px) !important;
+  min-height: 760px !important;
+}
+
+.bpv-info-actions {
+  width: min(1100px, 100%);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media (max-width: 760px) {
+  #bpvInfoView {
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+
+  .bpv-info-preview {
+    width: calc(100vw - 24px) !important;
+    margin-left: calc(50% - 50vw + 12px) !important;
+    margin-right: calc(50% - 50vw + 12px) !important;
+  }
+
+  .bpv-info-preview-frame,
+  .bpv-info-preview-frame iframe,
+  .bpv-info-preview-frame img,
+  .bpv-info-preview-frame video {
+    min-height: 72vh !important;
+    height: 72vh !important;
+  }
+}
+
+/* Correctie BPV Info: preview terug binnen de sitebreedte */
+#bpvInfoView {
+  max-width: 1100px !important;
+  padding-left: 20px !important;
+  padding-right: 20px !important;
+}
+
+.bpv-info-hero,
+.bpv-info-toolbar,
+.bpv-info-list-panel,
+.bpv-info-preview {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+.bpv-info-preview {
+  padding: 14px !important;
+  border-left-width: 6px !important;
+}
+
+.bpv-info-preview-head,
+.bpv-info-actions {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+.bpv-info-preview-frame {
+  width: 100% !important;
+  min-height: clamp(620px, 76vh, 840px) !important;
+  margin-top: 10px !important;
+}
+
+.bpv-info-preview-frame iframe,
+.bpv-info-preview-frame img,
+.bpv-info-preview-frame video {
+  width: 100% !important;
+  height: clamp(620px, 76vh, 840px) !important;
+  min-height: 620px !important;
+}
+
+@media (max-width: 760px) {
+  #bpvInfoView {
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+
+  .bpv-info-preview-frame,
+  .bpv-info-preview-frame iframe,
+  .bpv-info-preview-frame img,
+  .bpv-info-preview-frame video {
+    min-height: 68vh !important;
+    height: 68vh !important;
+  }
+}
+
+/* Correctie BPV Info: open document knop volledige breedte */
+.bpv-info-actions {
+  grid-template-columns: 1fr !important;
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+.bpv-info-action,
+.bpv-info-action.primary {
+  width: 100% !important;
 }

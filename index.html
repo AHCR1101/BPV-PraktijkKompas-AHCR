@@ -10,7 +10,7 @@
     <meta name="theme-color" content="#f29400" />
     <meta name="apple-mobile-web-app-title" content="PraktijkKompas" />
     <meta name="application-name" content="BPV PraktijkKompas AHCR" />
-    <link rel="stylesheet" href="styles.css?v=20260612-format-download-bottom" />
+    <link rel="stylesheet" href="styles.css?v=20260724-bpv-info" />
   </head>
   <body>
     <header class="app-header">
@@ -18,7 +18,7 @@
       <div class="header-layout">
         <div class="header-content">
           <h1 class="campaign-title">Albeda <span>Horecacollege</span></h1>
-          <p class="app-meta-subtitle" data-i18n="appSubtitle">Van Kwalificatiedossier Naar Opleidingsplan</p>
+          <p class="app-meta-subtitle" data-i18n="appSubtitle">BPV Kompas AHCR | Van Kwalificatiedossier Naar Opleidingsplan</p>
           <div class="language-switcher" aria-label="Taal kiezen">
             <button type="button" class="language-btn active" id="lang-nl" aria-label="Nederlands" title="Nederlands" data-lang="nl">
               <img class="flag-icon" src="assets/vlag-ned.jpeg" alt="" />
@@ -33,6 +33,14 @@
         </div>
       </div>
     </header>
+
+    
+    <nav class="primary-tabs-shell" aria-label="Hoofdonderdelen BPV PraktijkKompas">
+      <div class="primary-tabs">
+        <button class="primary-tab is-active" type="button" data-primary-tab="kompas" data-i18n="tabKompas">BPV PraktijkKompas</button>
+        <button class="primary-tab" type="button" data-primary-tab="info" data-i18n="tabInfo">BPV Info Praktijkopleiders</button>
+      </div>
+    </nav>
 
     <main id="landingView">
       <section class="intro-section panel" aria-labelledby="intro-title">
@@ -106,7 +114,70 @@
         <div class="route-grid" id="routeGrid"></div>
       </section>
     </main>
-    <main id="directionView" class="app-view is-hidden">
+    <main id="bpvInfoView" class="app-view bpv-info-view is-hidden">
+      <section class="bpv-info-hero panel" aria-labelledby="bpv-info-title">
+        <div>
+          <p class="eyebrow" data-i18n="infoEyebrow">BPV Info Praktijkopleiders</p>
+          <h2 id="bpv-info-title" data-i18n="infoTitle">Documentatie, afspraken en hulpmiddelen op één plek</h2>
+          <p data-i18n="infoIntro">Zoek snel in alle BPV-informatie voor praktijkopleiders. Filter op categorie of bestandstype, bekijk een preview waar mogelijk en open of download het document dat je nodig hebt.</p>
+        </div>
+        <div class="bpv-info-stat" aria-live="polite">
+          <strong id="bpvInfoTotal">0</strong>
+          <span data-i18n="infoDocuments">documenten</span>
+        </div>
+      </section>
+
+      <section class="bpv-info-dashboard" aria-labelledby="bpv-info-dashboard-title">
+        <div class="bpv-info-toolbar panel">
+          <div class="bpv-info-toolbar-heading">
+            <p class="eyebrow" data-i18n="infoToolbarEyebrow">Toolbox overzicht</p>
+            <h3 id="bpv-info-dashboard-title" data-i18n="infoToolbarTitle">Zoeken en filteren</h3>
+          </div>
+          <div class="bpv-info-controls">
+            <label class="info-field">
+              <span data-i18n="infoSearchLabel">Zoeken</span>
+              <input id="bpvInfoSearch" type="search" placeholder="Zoek op titel, map of bestandstype" data-i18n-placeholder="infoSearchPlaceholder" autocomplete="off" />
+            </label>
+            <label class="info-field">
+              <span data-i18n="infoCategoryLabel">Categorie</span>
+              <select id="bpvInfoCategory">
+                <option value="all" data-i18n="infoAllCategories">Alle categorieën</option>
+              </select>
+            </label>
+            <label class="info-field">
+              <span data-i18n="infoDocumentLabel">Document</span>
+              <select id="bpvInfoType">
+                <option value="all" data-i18n="infoAllDocuments">Alle documenten</option>
+              </select>
+            </label>
+            <button class="bpv-info-reset" id="bpvInfoReset" type="button" data-i18n="infoResetFilters">Filters Wissen</button>
+          </div>
+        </div>
+
+        <div class="bpv-info-layout">
+          <section class="bpv-info-list-panel panel" aria-labelledby="bpv-info-results-title">
+            <div class="bpv-info-results-head">
+              <div>
+                <p class="eyebrow" data-i18n="infoResultsEyebrow">Resultaten</p>
+                <h3 id="bpv-info-results-title" data-i18n="infoResultsTitle">Beschikbare documenten</h3>
+              </div>
+              <span class="bpv-info-count" id="bpvInfoCount">0 documenten</span>
+            </div>
+            <div class="bpv-info-list" id="bpvInfoList"></div>
+          </section>
+
+          <aside class="bpv-info-preview panel" aria-labelledby="bpv-info-preview-title">
+            <div class="bpv-info-preview-head">
+              <p class="eyebrow" data-i18n="infoPreviewEyebrow">Preview</p>
+              <h3 id="bpv-info-preview-title" data-i18n="infoPreviewTitle">Selecteer een document</h3>
+              <p id="bpvInfoPreviewMeta" data-i18n="infoPreviewEmpty">Klik op een document om de details en preview te bekijken.</p>
+            </div>
+            <div class="bpv-info-preview-frame" id="bpvInfoPreviewFrame"></div>
+            <div class="bpv-info-actions" id="bpvInfoActions"></div>
+          </aside>
+        </div>
+      </section>
+    </main>    <main id="directionView" class="app-view is-hidden">
       <div class="nav-row detail-nav">
         <button class="back-link" type="button" id="backToLanding" data-i18n="backToLanding">Terug naar Van Kwalificatiedossier Naar Opleidingsplan</button>
       </div>
@@ -411,9 +482,13 @@
       </aside>
     </div>
 
-    <script src="app.js?v=20260612-format-download-bottom"></script>
+    <script src="app.js?v=20260724-bpv-info"></script>
   </body>
 </html>
+
+
+
+
 
 
 

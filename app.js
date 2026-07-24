@@ -1,6 +1,30 @@
 ﻿const translations = {
   nl: {
-    appSubtitle: "Van Kwalificatiedossier Naar Opleidingsplan",
+    appSubtitle: "BPV Kompas AHCR | Van Kwalificatiedossier Naar Opleidingsplan",
+    tabKompas: "BPV PraktijkKompas",
+    tabInfo: "BPV Info Praktijkopleiders",
+    infoEyebrow: "BPV Info Praktijkopleiders",
+    infoTitle: "Documentatie, afspraken en hulpmiddelen op één plek",
+    infoIntro: "Zoek snel in alle BPV-informatie voor praktijkopleiders. Filter op categorie of bestandstype, bekijk een preview waar mogelijk en open of download het document dat je nodig hebt.",
+    infoDocuments: "documenten",
+    infoToolbarEyebrow: "Toolbox overzicht",
+    infoToolbarTitle: "Zoeken en filteren",
+    infoSearchLabel: "Zoeken",
+    infoSearchPlaceholder: "Zoek op titel, map of bestandstype",
+    infoCategoryLabel: "Categorie",
+    infoDocumentLabel: "Document",
+    infoAllCategories: "Alle categorieën",
+    infoAllDocuments: "Alle documenten",
+    infoResetFilters: "Filters Wissen",
+    infoResultsEyebrow: "Resultaten",
+    infoResultsTitle: "Beschikbare documenten",
+    infoPreviewEyebrow: "Preview",
+    infoPreviewTitle: "Selecteer een document",
+    infoPreviewEmpty: "Klik op een document om de details en preview te bekijken.",
+    infoOpenDocument: "Open Document",
+    infoDownloadDocument: "Download Document",
+    infoPreviewUnavailable: "Voor dit bestandstype is geen directe browserpreview beschikbaar. Open of download het document om de inhoud te bekijken.",
+    infoNoResults: "Geen documenten gevonden. Pas je zoekterm of filter aan.",
     introEyebrow: "Wat is het PraktijkKompas?",
     introTitle: "Richting geven aan leren in de praktijk",
     introP1: "Structuur en duidelijkheid zijn de sleutel tot succesvolle begeleiding. Als praktijkopleider speel jij een belangrijke rol in de ontwikkeling van jouw student. Een goed doordacht opleidingsplan helpt je om die begeleiding doelgericht vorm te geven en maakt verwachtingen, leerdoelen en voortgang voor iedereen inzichtelijk.",
@@ -70,7 +94,31 @@
     levelTitle: "Niveau van uitvoeren",
   },
   en: {
-    appSubtitle: "From Qualification File To Training Plan",
+    appSubtitle: "BPV Kompas AHCR | From Qualification File To Training Plan",
+    tabKompas: "BPV PraktijkKompas",
+    tabInfo: "BPV Info Workplace Trainers",
+    infoEyebrow: "BPV Info Workplace Trainers",
+    infoTitle: "Documentation, agreements and support materials in one place",
+    infoIntro: "Quickly search all BPV information for workplace trainers. Filter by category or file type, preview where possible and open or download the document you need.",
+    infoDocuments: "documents",
+    infoToolbarEyebrow: "Toolbox overview",
+    infoToolbarTitle: "Search and filter",
+    infoSearchLabel: "Search",
+    infoSearchPlaceholder: "Search by title, folder or file type",
+    infoCategoryLabel: "Category",
+    infoDocumentLabel: "Document",
+    infoAllCategories: "All categories",
+    infoAllDocuments: "All documents",
+    infoResetFilters: "Clear Filters",
+    infoResultsEyebrow: "Results",
+    infoResultsTitle: "Available documents",
+    infoPreviewEyebrow: "Preview",
+    infoPreviewTitle: "Select a document",
+    infoPreviewEmpty: "Click a document to view details and preview.",
+    infoOpenDocument: "Open Document",
+    infoDownloadDocument: "Download Document",
+    infoPreviewUnavailable: "A direct browser preview is not available for this file type. Open or download the document to view it.",
+    infoNoResults: "No documents found. Adjust your search term or filter.",
     introEyebrow: "What is PraktijkKompas?",
     introTitle: "Giving direction to workplace learning",
     introP1: "Structure and clarity are essential for successful guidance. As a workplace trainer, you play an important role in your student's development. A well-considered training plan helps you shape that guidance with purpose and makes expectations, learning goals and progress clear to everyone involved.",
@@ -196,6 +244,8 @@ const languageButtons = document.querySelectorAll(".language-btn");
 const landingView = document.querySelector("#landingView");
 const directionView = document.querySelector("#directionView");
 const workprocessView = document.querySelector("#workprocessView");
+const bpvInfoView = document.querySelector("#bpvInfoView");
+const primaryTabs = document.querySelectorAll(".primary-tab");
 const headerSubtitle = document.querySelector(".app-meta-subtitle");
 const directionTitle = document.querySelector("#directionTitle");
 const directionIntroText = document.querySelector("#directionIntroText");
@@ -3569,12 +3619,19 @@ function translatePage(language) {
     const key = node.dataset.i18n;
     if (translations[language][key]) node.textContent = translations[language][key];
   });
+  document.querySelectorAll("[data-i18n-placeholder]").forEach((node) => {
+    const key = node.dataset.i18nPlaceholder;
+    if (translations[language][key]) node.setAttribute("placeholder", translations[language][key]);
+  });
   languageButtons.forEach((button) => button.classList.toggle("active", button.dataset.lang === language));
   renderRoutes(currentDossier);
-  if (currentDirection) updateDirectionView();
+  if (bpvInfoView && !bpvInfoView.classList.contains("is-hidden")) {
+    headerSubtitle.textContent = translations[language].tabInfo;
+    if (typeof bpvInfoState !== "undefined" && bpvInfoState.initialized) fillBpvInfoFilters();
+    renderBpvInfoDashboard();
+  } else if (currentDirection) updateDirectionView();
   else headerSubtitle.textContent = translations[language].appSubtitle;
 }
-
 function routeIcon(directionKey) {
   const icons = {
     Keuken: `<svg class="route-icon" viewBox="0 0 80 80" aria-hidden="true"><path d="M18 46h44M22 46c0-14 9-25 18-25s18 11 18 25M40 16v8M26 58h28" /></svg>`,
@@ -4275,6 +4332,1924 @@ if (backToLanding) backToLanding.addEventListener("click", closeDirection);
 if (programmeSelect) programmeSelect.addEventListener("change", () => { populateYears(); updateSelectionSummary(); });
 if (yearSelect) yearSelect.addEventListener("change", updateSelectionSummary);
 
+const bpvInfoDocumentIndex = [
+  {
+    "id": "bpv-info-001",
+    "title": "BPV HANDLEIDING 'PRAKTIJKOPLEIDER' AHCR",
+    "fileName": "BPV HANDLEIDING 'PRAKTIJKOPLEIDER' AHCR.pdf",
+    "category": "BPV ALBEDA HORECACOLLEGE ROTTERDAM",
+    "subfolder": "",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 696451,
+    "updated": "2025-10-14",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20ALBEDA%20HORECACOLLEGE%20ROTTERDAM/BPV%20HANDLEIDING%20'PRAKTIJKOPLEIDER'%20AHCR.pdf"
+  },
+  {
+    "id": "bpv-info-002",
+    "title": "BPV TEASER Handleiding Praktijkopleider AHCR",
+    "fileName": "BPV TEASER Handleiding Praktijkopleider AHCR.mp4",
+    "category": "BPV ALBEDA HORECACOLLEGE ROTTERDAM",
+    "subfolder": "",
+    "type": "Video",
+    "extension": "mp4",
+    "sizeBytes": 12964178,
+    "updated": "2025-09-14",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20ALBEDA%20HORECACOLLEGE%20ROTTERDAM/BPV%20TEASER%20Handleiding%20Praktijkopleider%20AHCR.mp4"
+  },
+  {
+    "id": "bpv-info-003",
+    "title": "BPV HANDLEIDING Praktijkopleider WebAPP Praktijkbeoordelen",
+    "fileName": "BPV HANDLEIDING Praktijkopleider WebAPP Praktijkbeoordelen.pdf",
+    "category": "BPV EXAMENWERK",
+    "subfolder": "",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 896597,
+    "updated": "2025-07-18",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20EXAMENWERK/BPV%20HANDLEIDING%20Praktijkopleider%20WebAPP%20Praktijkbeoordelen.pdf"
+  },
+  {
+    "id": "bpv-info-004",
+    "title": "BPV HANDLEIDING Urenregistratie Praktijkbeoordelen Ontwikkelingsgericht",
+    "fileName": "BPV HANDLEIDING Urenregistratie Praktijkbeoordelen Ontwikkelingsgericht.pdf",
+    "category": "BPV EXAMENWERK",
+    "subfolder": "",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 577246,
+    "updated": "2025-07-18",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20EXAMENWERK/BPV%20HANDLEIDING%20Urenregistratie%20Praktijkbeoordelen%20Ontwikkelingsgericht.pdf"
+  },
+  {
+    "id": "bpv-info-005",
+    "title": "BPV HANDLEIDING WebAPP Praktijkbeoordelen",
+    "fileName": "BPV HANDLEIDING WebAPP Praktijkbeoordelen.pdf",
+    "category": "BPV EXAMENWERK",
+    "subfolder": "",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 991286,
+    "updated": "2025-07-18",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20EXAMENWERK/BPV%20HANDLEIDING%20WebAPP%20Praktijkbeoordelen.pdf"
+  },
+  {
+    "id": "bpv-info-006",
+    "title": "BPV STAPPENPLAN Beoordelaar Kwalificerend Praktijkbeoordelen",
+    "fileName": "BPV STAPPENPLAN Beoordelaar Kwalificerend Praktijkbeoordelen.pdf",
+    "category": "BPV EXAMENWERK",
+    "subfolder": "",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 311293,
+    "updated": "2025-07-18",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20EXAMENWERK/BPV%20STAPPENPLAN%20Beoordelaar%20Kwalificerend%20Praktijkbeoordelen.pdf"
+  },
+  {
+    "id": "bpv-info-007",
+    "title": "BPV STAPPENPLAN Praktijkopleider Ontwikkelingsgericht Praktijkbeoordelen",
+    "fileName": "BPV STAPPENPLAN Praktijkopleider Ontwikkelingsgericht Praktijkbeoordelen.pdf",
+    "category": "BPV EXAMENWERK",
+    "subfolder": "",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 326901,
+    "updated": "2025-07-18",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20EXAMENWERK/BPV%20STAPPENPLAN%20Praktijkopleider%20Ontwikkelingsgericht%20Praktijkbeoordelen.pdf"
+  },
+  {
+    "id": "bpv-info-008",
+    "title": "BPV STAPPENPLAN Student Ontwikkelingsgericht Praktijkbeoordelen",
+    "fileName": "BPV STAPPENPLAN Student Ontwikkelingsgericht Praktijkbeoordelen.pdf",
+    "category": "BPV EXAMENWERK",
+    "subfolder": "",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 188945,
+    "updated": "2025-07-18",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20EXAMENWERK/BPV%20STAPPENPLAN%20Student%20Ontwikkelingsgericht%20Praktijkbeoordelen.pdf"
+  },
+  {
+    "id": "bpv-info-009",
+    "title": "BPV KOMPAS Nieuwe KD KOK+ crebo 27060 versie 250426",
+    "fileName": "BPV KOMPAS Nieuwe KD KOK+ crebo 27060 versie 250426.pdf",
+    "category": "BPV HANDLEIDINGEN",
+    "subfolder": "",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 664396,
+    "updated": "2026-04-29",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20HANDLEIDINGEN/BPV%20KOMPAS%20Nieuwe%20KD%20KOK%2B%20crebo%2027060%20versie%20250426.pdf"
+  },
+  {
+    "id": "bpv-info-010",
+    "title": "Nieuw Beroepsbeschrijving Leidinggevende Hospitality",
+    "fileName": "Nieuw Beroepsbeschrijving Leidinggevende Hospitality.pdf",
+    "category": "BPV KWALIFICATIEDOSSIERS",
+    "subfolder": "NIEUW KWALIFICATIEDOSSIER 'BEDIENING'",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 19654,
+    "updated": "2026-02-13",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20KWALIFICATIEDOSSIERS/NIEUW%20KWALIFICATIEDOSSIER%20'BEDIENING'/Nieuw%20Beroepsbeschrijving%20Leidinggevende%20Hospitality.pdf"
+  },
+  {
+    "id": "bpv-info-011",
+    "title": "Nieuw Beroepsbeschrijving Medewerker Hospitality",
+    "fileName": "Nieuw Beroepsbeschrijving Medewerker Hospitality.pdf",
+    "category": "BPV KWALIFICATIEDOSSIERS",
+    "subfolder": "NIEUW KWALIFICATIEDOSSIER 'BEDIENING'",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 18455,
+    "updated": "2026-01-15",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20KWALIFICATIEDOSSIERS/NIEUW%20KWALIFICATIEDOSSIER%20'BEDIENING'/Nieuw%20Beroepsbeschrijving%20Medewerker%20Hospitality.pdf"
+  },
+  {
+    "id": "bpv-info-012",
+    "title": "Nieuw Beroepsbeschrijving Zelfstandig Medewerker Hospitality",
+    "fileName": "Nieuw Beroepsbeschrijving Zelfstandig Medewerker Hospitality.pdf",
+    "category": "BPV KWALIFICATIEDOSSIERS",
+    "subfolder": "NIEUW KWALIFICATIEDOSSIER 'BEDIENING'",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 18948,
+    "updated": "2026-01-15",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20KWALIFICATIEDOSSIERS/NIEUW%20KWALIFICATIEDOSSIER%20'BEDIENING'/Nieuw%20Beroepsbeschrijving%20Zelfstandig%20Medewerker%20Hospitality.pdf"
+  },
+  {
+    "id": "bpv-info-013",
+    "title": "Nieuw Kwalificatiedossier Leidinggevende Hospitality",
+    "fileName": "Nieuw Kwalificatiedossier Leidinggevende Hospitality.pdf",
+    "category": "BPV KWALIFICATIEDOSSIERS",
+    "subfolder": "NIEUW KWALIFICATIEDOSSIER 'BEDIENING'",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 284574,
+    "updated": "2026-02-13",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20KWALIFICATIEDOSSIERS/NIEUW%20KWALIFICATIEDOSSIER%20'BEDIENING'/Nieuw%20Kwalificatiedossier%20Leidinggevende%20Hospitality.pdf"
+  },
+  {
+    "id": "bpv-info-014",
+    "title": "Nieuw Kwalificatiedossier Medewerker Hospitality",
+    "fileName": "Nieuw Kwalificatiedossier Medewerker Hospitality.pdf",
+    "category": "BPV KWALIFICATIEDOSSIERS",
+    "subfolder": "NIEUW KWALIFICATIEDOSSIER 'BEDIENING'",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 248145,
+    "updated": "2026-01-15",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20KWALIFICATIEDOSSIERS/NIEUW%20KWALIFICATIEDOSSIER%20'BEDIENING'/Nieuw%20Kwalificatiedossier%20Medewerker%20Hospitality.pdf"
+  },
+  {
+    "id": "bpv-info-015",
+    "title": "Nieuw Kwalificatiedossier Zelfstandig Medewerker Hospitality",
+    "fileName": "Nieuw Kwalificatiedossier Zelfstandig Medewerker Hospitality.pdf",
+    "category": "BPV KWALIFICATIEDOSSIERS",
+    "subfolder": "NIEUW KWALIFICATIEDOSSIER 'BEDIENING'",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 265750,
+    "updated": "2026-01-15",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20KWALIFICATIEDOSSIERS/NIEUW%20KWALIFICATIEDOSSIER%20'BEDIENING'/Nieuw%20Kwalificatiedossier%20Zelfstandig%20Medewerker%20Hospitality.pdf"
+  },
+  {
+    "id": "bpv-info-016",
+    "title": "Nieuw Verantwoordingsinformatie Hospitality, Tourism & Leisure",
+    "fileName": "Nieuw Verantwoordingsinformatie Hospitality, Tourism & Leisure.pdf",
+    "category": "BPV KWALIFICATIEDOSSIERS",
+    "subfolder": "NIEUW KWALIFICATIEDOSSIER 'BEDIENING'",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 150238,
+    "updated": "2026-01-15",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20KWALIFICATIEDOSSIERS/NIEUW%20KWALIFICATIEDOSSIER%20'BEDIENING'/Nieuw%20Verantwoordingsinformatie%20Hospitality%2C%20Tourism%20%26%20Leisure.pdf"
+  },
+  {
+    "id": "bpv-info-017",
+    "title": "Nieuw Beroepsbeschrijving Gespecialiseerd Kok",
+    "fileName": "Nieuw Beroepsbeschrijving Gespecialiseerd Kok.pdf",
+    "category": "BPV KWALIFICATIEDOSSIERS",
+    "subfolder": "NIEUW KWALIFICATIEDOSSIER 'KEUKEN'",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 20116,
+    "updated": "2026-01-15",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20KWALIFICATIEDOSSIERS/NIEUW%20KWALIFICATIEDOSSIER%20'KEUKEN'/Nieuw%20Beroepsbeschrijving%20Gespecialiseerd%20Kok.pdf"
+  },
+  {
+    "id": "bpv-info-018",
+    "title": "Nieuw Beroepsbeschrijving Kok",
+    "fileName": "Nieuw Beroepsbeschrijving Kok.pdf",
+    "category": "BPV KWALIFICATIEDOSSIERS",
+    "subfolder": "NIEUW KWALIFICATIEDOSSIER 'KEUKEN'",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 18491,
+    "updated": "2026-01-15",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20KWALIFICATIEDOSSIERS/NIEUW%20KWALIFICATIEDOSSIER%20'KEUKEN'/Nieuw%20Beroepsbeschrijving%20Kok.pdf"
+  },
+  {
+    "id": "bpv-info-019",
+    "title": "Nieuw Beroepsbeschrijving Leidinggevende Keuken",
+    "fileName": "Nieuw Beroepsbeschrijving Leidinggevende Keuken.pdf",
+    "category": "BPV KWALIFICATIEDOSSIERS",
+    "subfolder": "NIEUW KWALIFICATIEDOSSIER 'KEUKEN'",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 19850,
+    "updated": "2026-01-15",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20KWALIFICATIEDOSSIERS/NIEUW%20KWALIFICATIEDOSSIER%20'KEUKEN'/Nieuw%20Beroepsbeschrijving%20Leidinggevende%20Keuken.pdf"
+  },
+  {
+    "id": "bpv-info-020",
+    "title": "Nieuw Beroepsbeschrijving Zelfstandig Werkend Kok",
+    "fileName": "Nieuw Beroepsbeschrijving Zelfstandig Werkend Kok.pdf",
+    "category": "BPV KWALIFICATIEDOSSIERS",
+    "subfolder": "NIEUW KWALIFICATIEDOSSIER 'KEUKEN'",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 19794,
+    "updated": "2026-01-15",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20KWALIFICATIEDOSSIERS/NIEUW%20KWALIFICATIEDOSSIER%20'KEUKEN'/Nieuw%20Beroepsbeschrijving%20Zelfstandig%20Werkend%20Kok.pdf"
+  },
+  {
+    "id": "bpv-info-021",
+    "title": "Nieuw Kwalificatiedossier Gespecialiseerd Kok",
+    "fileName": "Nieuw Kwalificatiedossier Gespecialiseerd Kok.pdf",
+    "category": "BPV KWALIFICATIEDOSSIERS",
+    "subfolder": "NIEUW KWALIFICATIEDOSSIER 'KEUKEN'",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 270010,
+    "updated": "2026-01-15",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20KWALIFICATIEDOSSIERS/NIEUW%20KWALIFICATIEDOSSIER%20'KEUKEN'/Nieuw%20Kwalificatiedossier%20Gespecialiseerd%20Kok.pdf"
+  },
+  {
+    "id": "bpv-info-022",
+    "title": "Nieuw Kwalificatiedossier Kok",
+    "fileName": "Nieuw Kwalificatiedossier Kok.pdf",
+    "category": "BPV KWALIFICATIEDOSSIERS",
+    "subfolder": "NIEUW KWALIFICATIEDOSSIER 'KEUKEN'",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 240388,
+    "updated": "2026-01-15",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20KWALIFICATIEDOSSIERS/NIEUW%20KWALIFICATIEDOSSIER%20'KEUKEN'/Nieuw%20Kwalificatiedossier%20Kok.pdf"
+  },
+  {
+    "id": "bpv-info-023",
+    "title": "Nieuw Kwalificatiedossier Leidinggevende Keuken",
+    "fileName": "Nieuw Kwalificatiedossier Leidinggevende Keuken.pdf",
+    "category": "BPV KWALIFICATIEDOSSIERS",
+    "subfolder": "NIEUW KWALIFICATIEDOSSIER 'KEUKEN'",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 270413,
+    "updated": "2026-01-15",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20KWALIFICATIEDOSSIERS/NIEUW%20KWALIFICATIEDOSSIER%20'KEUKEN'/Nieuw%20Kwalificatiedossier%20Leidinggevende%20Keuken.pdf"
+  },
+  {
+    "id": "bpv-info-024",
+    "title": "Nieuw Kwalificatiedossier Zelfstandig Werkend Kok",
+    "fileName": "Nieuw Kwalificatiedossier Zelfstandig Werkend Kok.pdf",
+    "category": "BPV KWALIFICATIEDOSSIERS",
+    "subfolder": "NIEUW KWALIFICATIEDOSSIER 'KEUKEN'",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 258972,
+    "updated": "2026-01-15",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20KWALIFICATIEDOSSIERS/NIEUW%20KWALIFICATIEDOSSIER%20'KEUKEN'/Nieuw%20Kwalificatiedossier%20Zelfstandig%20Werkend%20Kok.pdf"
+  },
+  {
+    "id": "bpv-info-025",
+    "title": "Nieuw Verantwoordingsinformatie Keuken & Foodservice",
+    "fileName": "Nieuw Verantwoordingsinformatie Keuken & Foodservice.pdf",
+    "category": "BPV KWALIFICATIEDOSSIERS",
+    "subfolder": "NIEUW KWALIFICATIEDOSSIER 'KEUKEN'",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 123993,
+    "updated": "2026-01-15",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20KWALIFICATIEDOSSIERS/NIEUW%20KWALIFICATIEDOSSIER%20'KEUKEN'/Nieuw%20Verantwoordingsinformatie%20Keuken%20%26%20Foodservice.pdf"
+  },
+  {
+    "id": "bpv-info-026",
+    "title": "Nieuw Beroepsbeschrijving Ondernemer Hospitality",
+    "fileName": "Nieuw Beroepsbeschrijving Ondernemer Hospitality.pdf",
+    "category": "BPV KWALIFICATIEDOSSIERS",
+    "subfolder": "NIEUW KWALIFICATIEDOSSIER 'MANAGEMENT'",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 19428,
+    "updated": "2026-01-15",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20KWALIFICATIEDOSSIERS/NIEUW%20KWALIFICATIEDOSSIER%20'MANAGEMENT'/Nieuw%20Beroepsbeschrijving%20Ondernemer%20Hospitality.pdf"
+  },
+  {
+    "id": "bpv-info-027",
+    "title": "Nieuw Kwalificatiedossier Ondernemer Hospitality",
+    "fileName": "Nieuw Kwalificatiedossier Ondernemer Hospitality.pdf",
+    "category": "BPV KWALIFICATIEDOSSIERS",
+    "subfolder": "NIEUW KWALIFICATIEDOSSIER 'MANAGEMENT'",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 289494,
+    "updated": "2026-01-15",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20KWALIFICATIEDOSSIERS/NIEUW%20KWALIFICATIEDOSSIER%20'MANAGEMENT'/Nieuw%20Kwalificatiedossier%20Ondernemer%20Hospitality.pdf"
+  },
+  {
+    "id": "bpv-info-028",
+    "title": "Nieuw Verantwoordingsinformatie Hospitality, Tourism & Leisure",
+    "fileName": "Nieuw Verantwoordingsinformatie Hospitality, Tourism & Leisure.pdf",
+    "category": "BPV KWALIFICATIEDOSSIERS",
+    "subfolder": "NIEUW KWALIFICATIEDOSSIER 'MANAGEMENT'",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 150238,
+    "updated": "2026-01-15",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20KWALIFICATIEDOSSIERS/NIEUW%20KWALIFICATIEDOSSIER%20'MANAGEMENT'/Nieuw%20Verantwoordingsinformatie%20Hospitality%2C%20Tourism%20%26%20Leisure.pdf"
+  },
+  {
+    "id": "bpv-info-029",
+    "title": "Oud Beroepsbeschrijving Gastheer-vrouw",
+    "fileName": "Oud Beroepsbeschrijving Gastheer-vrouw.pdf",
+    "category": "BPV KWALIFICATIEDOSSIERS",
+    "subfolder": "OUD KWALIFICATIEDOSSIER 'BEDIENING'",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 18972,
+    "updated": "2025-07-18",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20KWALIFICATIEDOSSIERS/OUD%20KWALIFICATIEDOSSIER%20'BEDIENING'/Oud%20Beroepsbeschrijving%20Gastheer-vrouw.pdf"
+  },
+  {
+    "id": "bpv-info-030",
+    "title": "Oud Beroepsbeschrijving Leidinggevende Bediening",
+    "fileName": "Oud Beroepsbeschrijving Leidinggevende Bediening.pdf",
+    "category": "BPV KWALIFICATIEDOSSIERS",
+    "subfolder": "OUD KWALIFICATIEDOSSIER 'BEDIENING'",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 19640,
+    "updated": "2025-07-18",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20KWALIFICATIEDOSSIERS/OUD%20KWALIFICATIEDOSSIER%20'BEDIENING'/Oud%20Beroepsbeschrijving%20Leidinggevende%20Bediening.pdf"
+  },
+  {
+    "id": "bpv-info-031",
+    "title": "Oud Beroepsbeschrijving Zelfstandig Werkend Gastheer-Vrouw",
+    "fileName": "Oud Beroepsbeschrijving Zelfstandig Werkend Gastheer-Vrouw.pdf",
+    "category": "BPV KWALIFICATIEDOSSIERS",
+    "subfolder": "OUD KWALIFICATIEDOSSIER 'BEDIENING'",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 19488,
+    "updated": "2025-07-18",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20KWALIFICATIEDOSSIERS/OUD%20KWALIFICATIEDOSSIER%20'BEDIENING'/Oud%20Beroepsbeschrijving%20Zelfstandig%20Werkend%20Gastheer-Vrouw.pdf"
+  },
+  {
+    "id": "bpv-info-032",
+    "title": "Oud Kwalificatiedossier Gastheer-Vrouw",
+    "fileName": "Oud Kwalificatiedossier Gastheer-Vrouw.pdf",
+    "category": "BPV KWALIFICATIEDOSSIERS",
+    "subfolder": "OUD KWALIFICATIEDOSSIER 'BEDIENING'",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 230357,
+    "updated": "2025-07-18",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20KWALIFICATIEDOSSIERS/OUD%20KWALIFICATIEDOSSIER%20'BEDIENING'/Oud%20Kwalificatiedossier%20Gastheer-Vrouw.pdf"
+  },
+  {
+    "id": "bpv-info-033",
+    "title": "Oud Kwalificatiedossier Leidinggevende Bediening",
+    "fileName": "Oud Kwalificatiedossier Leidinggevende Bediening.pdf",
+    "category": "BPV KWALIFICATIEDOSSIERS",
+    "subfolder": "OUD KWALIFICATIEDOSSIER 'BEDIENING'",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 279580,
+    "updated": "2025-07-18",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20KWALIFICATIEDOSSIERS/OUD%20KWALIFICATIEDOSSIER%20'BEDIENING'/Oud%20Kwalificatiedossier%20Leidinggevende%20Bediening.pdf"
+  },
+  {
+    "id": "bpv-info-034",
+    "title": "Oud Kwalificatiedossier Zelfstandig Werkend Gastheer-Vrouw",
+    "fileName": "Oud Kwalificatiedossier Zelfstandig Werkend Gastheer-Vrouw.pdf",
+    "category": "BPV KWALIFICATIEDOSSIERS",
+    "subfolder": "OUD KWALIFICATIEDOSSIER 'BEDIENING'",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 256941,
+    "updated": "2025-07-18",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20KWALIFICATIEDOSSIERS/OUD%20KWALIFICATIEDOSSIER%20'BEDIENING'/Oud%20Kwalificatiedossier%20Zelfstandig%20Werkend%20Gastheer-Vrouw.pdf"
+  },
+  {
+    "id": "bpv-info-035",
+    "title": "Oud Verantwoordingsinformatie Bediening",
+    "fileName": "Oud Verantwoordingsinformatie Bediening.pdf",
+    "category": "BPV KWALIFICATIEDOSSIERS",
+    "subfolder": "OUD KWALIFICATIEDOSSIER 'BEDIENING'",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 107390,
+    "updated": "2025-07-18",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20KWALIFICATIEDOSSIERS/OUD%20KWALIFICATIEDOSSIER%20'BEDIENING'/Oud%20Verantwoordingsinformatie%20Bediening.pdf"
+  },
+  {
+    "id": "bpv-info-036",
+    "title": "Oud Beroepsbeschrijving Gespecialiseerd Kok",
+    "fileName": "Oud Beroepsbeschrijving Gespecialiseerd Kok.pdf",
+    "category": "BPV KWALIFICATIEDOSSIERS",
+    "subfolder": "OUD KWALIFICATIEDOSSIER 'KEUKEN'",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 19122,
+    "updated": "2025-07-18",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20KWALIFICATIEDOSSIERS/OUD%20KWALIFICATIEDOSSIER%20'KEUKEN'/Oud%20Beroepsbeschrijving%20Gespecialiseerd%20Kok.pdf"
+  },
+  {
+    "id": "bpv-info-037",
+    "title": "Oud Beroepsbeschrijving Kok",
+    "fileName": "Oud Beroepsbeschrijving Kok.pdf",
+    "category": "BPV KWALIFICATIEDOSSIERS",
+    "subfolder": "OUD KWALIFICATIEDOSSIER 'KEUKEN'",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 18170,
+    "updated": "2025-07-18",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20KWALIFICATIEDOSSIERS/OUD%20KWALIFICATIEDOSSIER%20'KEUKEN'/Oud%20Beroepsbeschrijving%20Kok.pdf"
+  },
+  {
+    "id": "bpv-info-038",
+    "title": "Oud Beroepsbeschrijving Leidinggevende Keuken",
+    "fileName": "Oud Beroepsbeschrijving Leidinggevende Keuken.pdf",
+    "category": "BPV KWALIFICATIEDOSSIERS",
+    "subfolder": "OUD KWALIFICATIEDOSSIER 'KEUKEN'",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 18865,
+    "updated": "2025-07-18",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20KWALIFICATIEDOSSIERS/OUD%20KWALIFICATIEDOSSIER%20'KEUKEN'/Oud%20Beroepsbeschrijving%20Leidinggevende%20Keuken.pdf"
+  },
+  {
+    "id": "bpv-info-039",
+    "title": "Oud Beroepsbeschrijving Zelfstandig Werkend Kok",
+    "fileName": "Oud Beroepsbeschrijving Zelfstandig Werkend Kok.pdf",
+    "category": "BPV KWALIFICATIEDOSSIERS",
+    "subfolder": "OUD KWALIFICATIEDOSSIER 'KEUKEN'",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 18655,
+    "updated": "2025-07-18",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20KWALIFICATIEDOSSIERS/OUD%20KWALIFICATIEDOSSIER%20'KEUKEN'/Oud%20Beroepsbeschrijving%20Zelfstandig%20Werkend%20Kok.pdf"
+  },
+  {
+    "id": "bpv-info-040",
+    "title": "Oud Kwalificatiedossier Gespecialiseerd Kok",
+    "fileName": "Oud Kwalificatiedossier Gespecialiseerd Kok.pdf",
+    "category": "BPV KWALIFICATIEDOSSIERS",
+    "subfolder": "OUD KWALIFICATIEDOSSIER 'KEUKEN'",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 266155,
+    "updated": "2025-07-18",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20KWALIFICATIEDOSSIERS/OUD%20KWALIFICATIEDOSSIER%20'KEUKEN'/Oud%20Kwalificatiedossier%20Gespecialiseerd%20Kok.pdf"
+  },
+  {
+    "id": "bpv-info-041",
+    "title": "Oud Kwalificatiedossier Kok",
+    "fileName": "Oud Kwalificatiedossier Kok.pdf",
+    "category": "BPV KWALIFICATIEDOSSIERS",
+    "subfolder": "OUD KWALIFICATIEDOSSIER 'KEUKEN'",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 227990,
+    "updated": "2025-07-18",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20KWALIFICATIEDOSSIERS/OUD%20KWALIFICATIEDOSSIER%20'KEUKEN'/Oud%20Kwalificatiedossier%20Kok.pdf"
+  },
+  {
+    "id": "bpv-info-042",
+    "title": "Oud Kwalificatiedossier Leidinggevende Keuken",
+    "fileName": "Oud Kwalificatiedossier Leidinggevende Keuken.pdf",
+    "category": "BPV KWALIFICATIEDOSSIERS",
+    "subfolder": "OUD KWALIFICATIEDOSSIER 'KEUKEN'",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 268324,
+    "updated": "2025-07-18",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20KWALIFICATIEDOSSIERS/OUD%20KWALIFICATIEDOSSIER%20'KEUKEN'/Oud%20Kwalificatiedossier%20Leidinggevende%20Keuken.pdf"
+  },
+  {
+    "id": "bpv-info-043",
+    "title": "Oud Kwalificatiedossier Zelfstandig Werkend Kok",
+    "fileName": "Oud Kwalificatiedossier Zelfstandig Werkend Kok.pdf",
+    "category": "BPV KWALIFICATIEDOSSIERS",
+    "subfolder": "OUD KWALIFICATIEDOSSIER 'KEUKEN'",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 251791,
+    "updated": "2025-07-18",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20KWALIFICATIEDOSSIERS/OUD%20KWALIFICATIEDOSSIER%20'KEUKEN'/Oud%20Kwalificatiedossier%20Zelfstandig%20Werkend%20Kok.pdf"
+  },
+  {
+    "id": "bpv-info-044",
+    "title": "Oud Verantwoordingsinformatie Keuken",
+    "fileName": "Oud Verantwoordingsinformatie Keuken.pdf",
+    "category": "BPV KWALIFICATIEDOSSIERS",
+    "subfolder": "OUD KWALIFICATIEDOSSIER 'KEUKEN'",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 98670,
+    "updated": "2025-07-18",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20KWALIFICATIEDOSSIERS/OUD%20KWALIFICATIEDOSSIER%20'KEUKEN'/Oud%20Verantwoordingsinformatie%20Keuken.pdf"
+  },
+  {
+    "id": "bpv-info-045",
+    "title": "Oud Beroepsbeschrijving Manager Ondernemer Horeca",
+    "fileName": "Oud Beroepsbeschrijving Manager Ondernemer Horeca.pdf",
+    "category": "BPV KWALIFICATIEDOSSIERS",
+    "subfolder": "OUD KWALIFICATIEDOSSIER 'MANAGEMENT'",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 19432,
+    "updated": "2025-07-18",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20KWALIFICATIEDOSSIERS/OUD%20KWALIFICATIEDOSSIER%20'MANAGEMENT'/Oud%20Beroepsbeschrijving%20Manager%20Ondernemer%20Horeca.pdf"
+  },
+  {
+    "id": "bpv-info-046",
+    "title": "Oud Beroepsbeschrijving Meewerkend Horeca Ondernemer",
+    "fileName": "Oud Beroepsbeschrijving Meewerkend Horeca Ondernemer.pdf",
+    "category": "BPV KWALIFICATIEDOSSIERS",
+    "subfolder": "OUD KWALIFICATIEDOSSIER 'MANAGEMENT'",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 19409,
+    "updated": "2025-07-18",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20KWALIFICATIEDOSSIERS/OUD%20KWALIFICATIEDOSSIER%20'MANAGEMENT'/Oud%20Beroepsbeschrijving%20Meewerkend%20Horeca%20Ondernemer.pdf"
+  },
+  {
+    "id": "bpv-info-047",
+    "title": "Oud Kwalificatiedossier Manager Ondernemer Horeca",
+    "fileName": "Oud Kwalificatiedossier Manager Ondernemer Horeca.pdf",
+    "category": "BPV KWALIFICATIEDOSSIERS",
+    "subfolder": "OUD KWALIFICATIEDOSSIER 'MANAGEMENT'",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 275780,
+    "updated": "2025-07-18",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20KWALIFICATIEDOSSIERS/OUD%20KWALIFICATIEDOSSIER%20'MANAGEMENT'/Oud%20Kwalificatiedossier%20Manager%20Ondernemer%20Horeca.pdf"
+  },
+  {
+    "id": "bpv-info-048",
+    "title": "Oud Kwalificatiedossier Meewerkend Horeca Ondernemer",
+    "fileName": "Oud Kwalificatiedossier Meewerkend Horeca Ondernemer.pdf",
+    "category": "BPV KWALIFICATIEDOSSIERS",
+    "subfolder": "OUD KWALIFICATIEDOSSIER 'MANAGEMENT'",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 265889,
+    "updated": "2025-07-18",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20KWALIFICATIEDOSSIERS/OUD%20KWALIFICATIEDOSSIER%20'MANAGEMENT'/Oud%20Kwalificatiedossier%20Meewerkend%20Horeca%20Ondernemer.pdf"
+  },
+  {
+    "id": "bpv-info-049",
+    "title": "Oud Verantwoordingsinformatie Ondernemer",
+    "fileName": "Oud Verantwoordingsinformatie Ondernemer.pdf",
+    "category": "BPV KWALIFICATIEDOSSIERS",
+    "subfolder": "OUD KWALIFICATIEDOSSIER 'MANAGEMENT'",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 99315,
+    "updated": "2025-07-18",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20KWALIFICATIEDOSSIERS/OUD%20KWALIFICATIEDOSSIER%20'MANAGEMENT'/Oud%20Verantwoordingsinformatie%20Ondernemer.pdf"
+  },
+  {
+    "id": "bpv-info-050",
+    "title": "Vergelijking KD Gastheer-Vrouw vs Medewerker Hospitality",
+    "fileName": "Vergelijking KD Gastheer-Vrouw vs Medewerker Hospitality.pdf",
+    "category": "BPV KWALIFICATIEDOSSIERS",
+    "subfolder": "VERGELIJKINGEN Oude KD vs Nieuwe KD per opleiding",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 134614,
+    "updated": "2026-07-23",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20KWALIFICATIEDOSSIERS/VERGELIJKINGEN%20Oude%20KD%20vs%20Nieuwe%20KD%20per%20opleiding/Vergelijking%20KD%20Gastheer-Vrouw%20vs%20Medewerker%20Hospitality.pdf"
+  },
+  {
+    "id": "bpv-info-051",
+    "title": "Vergelijking KD Gespecialiseerd Kok 2015-2024",
+    "fileName": "Vergelijking KD Gespecialiseerd Kok 2015-2024.pdf",
+    "category": "BPV KWALIFICATIEDOSSIERS",
+    "subfolder": "VERGELIJKINGEN Oude KD vs Nieuwe KD per opleiding",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 137089,
+    "updated": "2026-07-23",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20KWALIFICATIEDOSSIERS/VERGELIJKINGEN%20Oude%20KD%20vs%20Nieuwe%20KD%20per%20opleiding/Vergelijking%20KD%20Gespecialiseerd%20Kok%202015-2024.pdf"
+  },
+  {
+    "id": "bpv-info-052",
+    "title": "Vergelijking KD Kok 2015-2024",
+    "fileName": "Vergelijking KD Kok 2015-2024.pdf",
+    "category": "BPV KWALIFICATIEDOSSIERS",
+    "subfolder": "VERGELIJKINGEN Oude KD vs Nieuwe KD per opleiding",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 133150,
+    "updated": "2026-07-23",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20KWALIFICATIEDOSSIERS/VERGELIJKINGEN%20Oude%20KD%20vs%20Nieuwe%20KD%20per%20opleiding/Vergelijking%20KD%20Kok%202015-2024.pdf"
+  },
+  {
+    "id": "bpv-info-053",
+    "title": "Vergelijking KD Leidinggevende Bediening vs Leidinggevende Hospitality",
+    "fileName": "Vergelijking KD Leidinggevende Bediening vs Leidinggevende Hospitality.pdf",
+    "category": "BPV KWALIFICATIEDOSSIERS",
+    "subfolder": "VERGELIJKINGEN Oude KD vs Nieuwe KD per opleiding",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 133752,
+    "updated": "2026-07-23",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20KWALIFICATIEDOSSIERS/VERGELIJKINGEN%20Oude%20KD%20vs%20Nieuwe%20KD%20per%20opleiding/Vergelijking%20KD%20Leidinggevende%20Bediening%20vs%20Leidinggevende%20Hospitality.pdf"
+  },
+  {
+    "id": "bpv-info-054",
+    "title": "Vergelijking KD Leidinggevende Keuken 2015-2024",
+    "fileName": "Vergelijking KD Leidinggevende Keuken 2015-2024.pdf",
+    "category": "BPV KWALIFICATIEDOSSIERS",
+    "subfolder": "VERGELIJKINGEN Oude KD vs Nieuwe KD per opleiding",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 137608,
+    "updated": "2026-07-23",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20KWALIFICATIEDOSSIERS/VERGELIJKINGEN%20Oude%20KD%20vs%20Nieuwe%20KD%20per%20opleiding/Vergelijking%20KD%20Leidinggevende%20Keuken%202015-2024.pdf"
+  },
+  {
+    "id": "bpv-info-055",
+    "title": "Vergelijking KD MOH-MHO vs Ondernemer Hospitality",
+    "fileName": "Vergelijking KD MOH-MHO vs Ondernemer Hospitality.pdf",
+    "category": "BPV KWALIFICATIEDOSSIERS",
+    "subfolder": "VERGELIJKINGEN Oude KD vs Nieuwe KD per opleiding",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 142652,
+    "updated": "2026-07-23",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20KWALIFICATIEDOSSIERS/VERGELIJKINGEN%20Oude%20KD%20vs%20Nieuwe%20KD%20per%20opleiding/Vergelijking%20KD%20MOH-MHO%20vs%20Ondernemer%20Hospitality.pdf"
+  },
+  {
+    "id": "bpv-info-056",
+    "title": "Vergelijking KD Zelfst. Gastheer-Vrouw vs Zelfst. Medewerker Hospitality",
+    "fileName": "Vergelijking KD Zelfst. Gastheer-Vrouw vs Zelfst. Medewerker Hospitality.pdf",
+    "category": "BPV KWALIFICATIEDOSSIERS",
+    "subfolder": "VERGELIJKINGEN Oude KD vs Nieuwe KD per opleiding",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 138382,
+    "updated": "2026-07-23",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20KWALIFICATIEDOSSIERS/VERGELIJKINGEN%20Oude%20KD%20vs%20Nieuwe%20KD%20per%20opleiding/Vergelijking%20KD%20Zelfst.%20Gastheer-Vrouw%20vs%20Zelfst.%20Medewerker%20Hospitality.pdf"
+  },
+  {
+    "id": "bpv-info-057",
+    "title": "Vergelijking KD Zelfstandig Werkend Kok 2015-2024",
+    "fileName": "Vergelijking KD Zelfstandig Werkend Kok 2015-2024.pdf",
+    "category": "BPV KWALIFICATIEDOSSIERS",
+    "subfolder": "VERGELIJKINGEN Oude KD vs Nieuwe KD per opleiding",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 137172,
+    "updated": "2026-07-23",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20KWALIFICATIEDOSSIERS/VERGELIJKINGEN%20Oude%20KD%20vs%20Nieuwe%20KD%20per%20opleiding/Vergelijking%20KD%20Zelfstandig%20Werkend%20Kok%202015-2024.pdf"
+  },
+  {
+    "id": "bpv-info-058",
+    "title": "BPV OPDRACHTEN GHV 25168",
+    "fileName": "BPV OPDRACHTEN GHV 25168.pdf",
+    "category": "BPV OPDRACHTEN",
+    "subfolder": "BPV OPDRACHTEN 'BEDIENING' Oud KD",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 163427,
+    "updated": "2025-09-16",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20OPDRACHTEN/BPV%20OPDRACHTEN%20'BEDIENING'%20Oud%20KD/BPV%20OPDRACHTEN%20GHV%2025168.pdf"
+  },
+  {
+    "id": "bpv-info-059",
+    "title": "BPV OPDRACHTEN LGB 25170",
+    "fileName": "BPV OPDRACHTEN LGB 25170.pdf",
+    "category": "BPV OPDRACHTEN",
+    "subfolder": "BPV OPDRACHTEN 'BEDIENING' Oud KD",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 182091,
+    "updated": "2025-09-16",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20OPDRACHTEN/BPV%20OPDRACHTEN%20'BEDIENING'%20Oud%20KD/BPV%20OPDRACHTEN%20LGB%2025170.pdf"
+  },
+  {
+    "id": "bpv-info-060",
+    "title": "BPV OPDRACHTEN ZWG 25171",
+    "fileName": "BPV OPDRACHTEN ZWG 25171.pdf",
+    "category": "BPV OPDRACHTEN",
+    "subfolder": "BPV OPDRACHTEN 'BEDIENING' Oud KD",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 180356,
+    "updated": "2025-09-16",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20OPDRACHTEN/BPV%20OPDRACHTEN%20'BEDIENING'%20Oud%20KD/BPV%20OPDRACHTEN%20ZWG%2025171.pdf"
+  },
+  {
+    "id": "bpv-info-061",
+    "title": "BPV OPDRACHTEN ZWG-LGB Tafelbereidingen & Technieken",
+    "fileName": "BPV OPDRACHTEN ZWG-LGB Tafelbereidingen & Technieken.pdf",
+    "category": "BPV OPDRACHTEN",
+    "subfolder": "BPV OPDRACHTEN 'BEDIENING' Oud KD",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 223387,
+    "updated": "2025-08-25",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20OPDRACHTEN/BPV%20OPDRACHTEN%20'BEDIENING'%20Oud%20KD/BPV%20OPDRACHTEN%20ZWG-LGB%20Tafelbereidingen%20%26%20Technieken.pdf"
+  },
+  {
+    "id": "bpv-info-062",
+    "title": "LMS BEROEPSTAKEN Bar",
+    "fileName": "LMS BEROEPSTAKEN Bar.pdf",
+    "category": "BPV OPDRACHTEN",
+    "subfolder": "BPV OPDRACHTEN 'BEDIENING' Oud KD",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 172924,
+    "updated": "2025-10-07",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20OPDRACHTEN/BPV%20OPDRACHTEN%20'BEDIENING'%20Oud%20KD/LMS%20BEROEPSTAKEN%20Bar.pdf"
+  },
+  {
+    "id": "bpv-info-063",
+    "title": "LMS BEROEPSTAKEN Facilitair",
+    "fileName": "LMS BEROEPSTAKEN Facilitair.pdf",
+    "category": "BPV OPDRACHTEN",
+    "subfolder": "BPV OPDRACHTEN 'BEDIENING' Oud KD",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 223388,
+    "updated": "2025-10-07",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20OPDRACHTEN/BPV%20OPDRACHTEN%20'BEDIENING'%20Oud%20KD/LMS%20BEROEPSTAKEN%20Facilitair.pdf"
+  },
+  {
+    "id": "bpv-info-064",
+    "title": "LMS BEROEPSTAKEN Financieel",
+    "fileName": "LMS BEROEPSTAKEN Financieel.pdf",
+    "category": "BPV OPDRACHTEN",
+    "subfolder": "BPV OPDRACHTEN 'BEDIENING' Oud KD",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 216489,
+    "updated": "2025-10-07",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20OPDRACHTEN/BPV%20OPDRACHTEN%20'BEDIENING'%20Oud%20KD/LMS%20BEROEPSTAKEN%20Financieel.pdf"
+  },
+  {
+    "id": "bpv-info-065",
+    "title": "LMS BEROEPSTAKEN GHV",
+    "fileName": "LMS BEROEPSTAKEN GHV.pdf",
+    "category": "BPV OPDRACHTEN",
+    "subfolder": "BPV OPDRACHTEN 'BEDIENING' Oud KD",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 253753,
+    "updated": "2025-10-07",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20OPDRACHTEN/BPV%20OPDRACHTEN%20'BEDIENING'%20Oud%20KD/LMS%20BEROEPSTAKEN%20GHV.pdf"
+  },
+  {
+    "id": "bpv-info-066",
+    "title": "LMS BEROEPSTAKEN Pas",
+    "fileName": "LMS BEROEPSTAKEN Pas.pdf",
+    "category": "BPV OPDRACHTEN",
+    "subfolder": "BPV OPDRACHTEN 'BEDIENING' Oud KD",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 145237,
+    "updated": "2025-10-07",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20OPDRACHTEN/BPV%20OPDRACHTEN%20'BEDIENING'%20Oud%20KD/LMS%20BEROEPSTAKEN%20Pas.pdf"
+  },
+  {
+    "id": "bpv-info-067",
+    "title": "LMS BEROEPSTAKEN Runner",
+    "fileName": "LMS BEROEPSTAKEN Runner.pdf",
+    "category": "BPV OPDRACHTEN",
+    "subfolder": "BPV OPDRACHTEN 'BEDIENING' Oud KD",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 240208,
+    "updated": "2025-10-07",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20OPDRACHTEN/BPV%20OPDRACHTEN%20'BEDIENING'%20Oud%20KD/LMS%20BEROEPSTAKEN%20Runner.pdf"
+  },
+  {
+    "id": "bpv-info-068",
+    "title": "BPV HANDLEIDING My Signature 191225",
+    "fileName": "BPV HANDLEIDING My Signature 191225.pdf",
+    "category": "BPV OPDRACHTEN",
+    "subfolder": "BPV OPDRACHTEN 'KEUKEN' Oud KD",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 11164692,
+    "updated": "2025-12-19",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20OPDRACHTEN/BPV%20OPDRACHTEN%20'KEUKEN'%20Oud%20KD/BPV%20HANDLEIDING%20My%20Signature%20191225.pdf"
+  },
+  {
+    "id": "bpv-info-069",
+    "title": "BPV OPDRACHT My Signature ZWK, GSK, LGK",
+    "fileName": "BPV OPDRACHT My Signature ZWK, GSK, LGK.pdf",
+    "category": "BPV OPDRACHTEN",
+    "subfolder": "BPV OPDRACHTEN 'KEUKEN' Oud KD",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 490964,
+    "updated": "2025-08-08",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20OPDRACHTEN/BPV%20OPDRACHTEN%20'KEUKEN'%20Oud%20KD/BPV%20OPDRACHT%20My%20Signature%20ZWK%2C%20GSK%2C%20LGK.pdf"
+  },
+  {
+    "id": "bpv-info-070",
+    "title": "BPV OPDRACHTEN GSK 25179",
+    "fileName": "BPV OPDRACHTEN GSK 25179.pdf",
+    "category": "BPV OPDRACHTEN",
+    "subfolder": "BPV OPDRACHTEN 'KEUKEN' Oud KD",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 175648,
+    "updated": "2025-09-16",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20OPDRACHTEN/BPV%20OPDRACHTEN%20'KEUKEN'%20Oud%20KD/BPV%20OPDRACHTEN%20GSK%2025179.pdf"
+  },
+  {
+    "id": "bpv-info-071",
+    "title": "BPV OPDRACHTEN KOK 25180",
+    "fileName": "BPV OPDRACHTEN KOK 25180.pdf",
+    "category": "BPV OPDRACHTEN",
+    "subfolder": "BPV OPDRACHTEN 'KEUKEN' Oud KD",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 162873,
+    "updated": "2025-09-16",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20OPDRACHTEN/BPV%20OPDRACHTEN%20'KEUKEN'%20Oud%20KD/BPV%20OPDRACHTEN%20KOK%2025180.pdf"
+  },
+  {
+    "id": "bpv-info-072",
+    "title": "BPV OPDRACHTEN LGK 25181",
+    "fileName": "BPV OPDRACHTEN LGK 25181.pdf",
+    "category": "BPV OPDRACHTEN",
+    "subfolder": "BPV OPDRACHTEN 'KEUKEN' Oud KD",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 176566,
+    "updated": "2025-09-16",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20OPDRACHTEN/BPV%20OPDRACHTEN%20'KEUKEN'%20Oud%20KD/BPV%20OPDRACHTEN%20LGK%2025181.pdf"
+  },
+  {
+    "id": "bpv-info-073",
+    "title": "BPV OPDRACHTEN ZWK 25182",
+    "fileName": "BPV OPDRACHTEN ZWK 25182.pdf",
+    "category": "BPV OPDRACHTEN",
+    "subfolder": "BPV OPDRACHTEN 'KEUKEN' Oud KD",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 174361,
+    "updated": "2025-09-16",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20OPDRACHTEN/BPV%20OPDRACHTEN%20'KEUKEN'%20Oud%20KD/BPV%20OPDRACHTEN%20ZWK%2025182.pdf"
+  },
+  {
+    "id": "bpv-info-074",
+    "title": "BPV TAKENBOEK KOK, ZWK, GSK, LGK",
+    "fileName": "BPV TAKENBOEK KOK, ZWK, GSK, LGK.docx",
+    "category": "BPV OPDRACHTEN",
+    "subfolder": "BPV OPDRACHTEN 'KEUKEN' Oud KD",
+    "type": "Word",
+    "extension": "docx",
+    "sizeBytes": 462189,
+    "updated": "2025-08-25",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20OPDRACHTEN/BPV%20OPDRACHTEN%20'KEUKEN'%20Oud%20KD/BPV%20TAKENBOEK%20KOK%2C%20ZWK%2C%20GSK%2C%20LGK.docx"
+  },
+  {
+    "id": "bpv-info-075",
+    "title": "BPV VOORBEELD_UITWERKING_VIJFTIEN-GANGEN-MENU",
+    "fileName": "BPV VOORBEELD_UITWERKING_VIJFTIEN-GANGEN-MENU.docx",
+    "category": "BPV OPDRACHTEN",
+    "subfolder": "BPV OPDRACHTEN 'KEUKEN' Oud KD",
+    "type": "Word",
+    "extension": "docx",
+    "sizeBytes": 124453,
+    "updated": "2026-06-15",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20OPDRACHTEN/BPV%20OPDRACHTEN%20'KEUKEN'%20Oud%20KD/BPV%20VOORBEELD_UITWERKING_VIJFTIEN-GANGEN-MENU.docx"
+  },
+  {
+    "id": "bpv-info-076",
+    "title": "BPV OPDRACHTEN MHO 25185",
+    "fileName": "BPV OPDRACHTEN MHO 25185.pdf",
+    "category": "BPV OPDRACHTEN",
+    "subfolder": "BPV OPDRACHTEN 'MANAGEMENT' Oud KD",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 175558,
+    "updated": "2025-09-16",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20OPDRACHTEN/BPV%20OPDRACHTEN%20'MANAGEMENT'%20Oud%20KD/BPV%20OPDRACHTEN%20MHO%2025185.pdf"
+  },
+  {
+    "id": "bpv-info-077",
+    "title": "BPV OPDRACHTEN MOH 25184",
+    "fileName": "BPV OPDRACHTEN MOH 25184.pdf",
+    "category": "BPV OPDRACHTEN",
+    "subfolder": "BPV OPDRACHTEN 'MANAGEMENT' Oud KD",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 181422,
+    "updated": "2025-09-16",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20OPDRACHTEN/BPV%20OPDRACHTEN%20'MANAGEMENT'%20Oud%20KD/BPV%20OPDRACHTEN%20MOH%2025184.pdf"
+  },
+  {
+    "id": "bpv-info-078",
+    "title": "BPV ALGEMENE VOORWAARDEN POK",
+    "fileName": "BPV ALGEMENE VOORWAARDEN POK.pdf",
+    "category": "BPV POK-CAO-STAGEPACT",
+    "subfolder": "",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 142930,
+    "updated": "2025-08-04",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20POK-CAO-STAGEPACT/BPV%20ALGEMENE%20VOORWAARDEN%20POK.pdf"
+  },
+  {
+    "id": "bpv-info-079",
+    "title": "BPV HANDLEIDING Check je Pok",
+    "fileName": "BPV HANDLEIDING Check je Pok.pdf",
+    "category": "BPV POK-CAO-STAGEPACT",
+    "subfolder": "",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 402051,
+    "updated": "2026-07-09",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20POK-CAO-STAGEPACT/BPV%20HANDLEIDING%20Check%20je%20Pok.pdf"
+  },
+  {
+    "id": "bpv-info-080",
+    "title": "BPV HORECA CAO 2025-2026",
+    "fileName": "BPV HORECA CAO 2025-2026.pdf",
+    "category": "BPV POK-CAO-STAGEPACT",
+    "subfolder": "",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 1997309,
+    "updated": "2026-07-20",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20POK-CAO-STAGEPACT/BPV%20HORECA%20CAO%202025-2026.pdf"
+  },
+  {
+    "id": "bpv-info-081",
+    "title": "BPV HORECA Loontabellen 010126",
+    "fileName": "BPV HORECA Loontabellen 010126.pdf",
+    "category": "BPV POK-CAO-STAGEPACT",
+    "subfolder": "",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 124918,
+    "updated": "2026-07-20",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20POK-CAO-STAGEPACT/BPV%20HORECA%20Loontabellen%20010126.pdf"
+  },
+  {
+    "id": "bpv-info-082",
+    "title": "BPV SERVICEDOCUMENT Praktijkovereenkomst 2025-2026",
+    "fileName": "BPV SERVICEDOCUMENT Praktijkovereenkomst 2025-2026.pdf",
+    "category": "BPV POK-CAO-STAGEPACT",
+    "subfolder": "",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 429281,
+    "updated": "2025-06-14",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20POK-CAO-STAGEPACT/BPV%20SERVICEDOCUMENT%20Praktijkovereenkomst%202025-2026.pdf"
+  },
+  {
+    "id": "bpv-info-083",
+    "title": "BPV STAGEPACT MBO 2023-2027",
+    "fileName": "BPV STAGEPACT MBO 2023-2027.pdf",
+    "category": "BPV POK-CAO-STAGEPACT",
+    "subfolder": "",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 1015221,
+    "updated": "2025-06-14",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20POK-CAO-STAGEPACT/BPV%20STAGEPACT%20MBO%202023-2027.pdf"
+  },
+  {
+    "id": "bpv-info-084",
+    "title": "BPV VOORBEELD POK+BPV-blad+NL+Digitaal Getekend",
+    "fileName": "BPV VOORBEELD POK+BPV-blad+NL+Digitaal Getekend.pdf",
+    "category": "BPV POK-CAO-STAGEPACT",
+    "subfolder": "",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 193863,
+    "updated": "2025-09-05",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20POK-CAO-STAGEPACT/BPV%20VOORBEELD%20POK%2BBPV-blad%2BNL%2BDigitaal%20Getekend.pdf"
+  },
+  {
+    "id": "bpv-info-085",
+    "title": "BPV VOORBEELD POK+BPV-blad+NL+Digitaal Niet Getekend",
+    "fileName": "BPV VOORBEELD POK+BPV-blad+NL+Digitaal Niet Getekend.pdf",
+    "category": "BPV POK-CAO-STAGEPACT",
+    "subfolder": "",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 177835,
+    "updated": "2025-09-05",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20POK-CAO-STAGEPACT/BPV%20VOORBEELD%20POK%2BBPV-blad%2BNL%2BDigitaal%20Niet%20Getekend.pdf"
+  },
+  {
+    "id": "bpv-info-086",
+    "title": "BASIS- EN PROFIELDELEN PER OPLEIDING OUDE KD",
+    "fileName": "BASIS- EN PROFIELDELEN PER OPLEIDING OUDE KD.pdf",
+    "category": "BPV PRAKTIJKKOMPAS",
+    "subfolder": "",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 179165,
+    "updated": "2025-10-13",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20PRAKTIJKKOMPAS/BASIS-%20EN%20PROFIELDELEN%20PER%20OPLEIDING%20OUDE%20KD.pdf"
+  },
+  {
+    "id": "bpv-info-087",
+    "title": "HANDLEIDING CHATGPT 'BPV PLANPRO AHCR'",
+    "fileName": "HANDLEIDING CHATGPT 'BPV PLANPRO AHCR'.pdf",
+    "category": "BPV PRAKTIJKKOMPAS",
+    "subfolder": "",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 246988,
+    "updated": "2026-07-22",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20PRAKTIJKKOMPAS/HANDLEIDING%20CHATGPT%20'BPV%20PLANPRO%20AHCR'.pdf"
+  },
+  {
+    "id": "bpv-info-088",
+    "title": "INFOGRAPHIC BPV PLANPRO AHCR",
+    "fileName": "INFOGRAPHIC BPV PLANPRO AHCR.pdf",
+    "category": "BPV PRAKTIJKKOMPAS",
+    "subfolder": "",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 450205,
+    "updated": "2026-01-21",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20PRAKTIJKKOMPAS/INFOGRAPHIC%20BPV%20PLANPRO%20AHCR.pdf"
+  },
+  {
+    "id": "bpv-info-089",
+    "title": "QR 'BPV PlanPro AHCR' praktijkopleiders",
+    "fileName": "QR 'BPV PlanPro AHCR' praktijkopleiders.pdf",
+    "category": "BPV PRAKTIJKKOMPAS",
+    "subfolder": "",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 156150,
+    "updated": "2025-12-10",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20PRAKTIJKKOMPAS/QR%20'BPV%20PlanPro%20AHCR'%20praktijkopleiders.pdf"
+  },
+  {
+    "id": "bpv-info-090",
+    "title": "Stap 1 'BPV INFORMATIE MBT HET OPLEIDINGSPLAN'",
+    "fileName": "Stap 1 'BPV INFORMATIE MBT HET OPLEIDINGSPLAN'.docx",
+    "category": "BPV PRAKTIJKKOMPAS",
+    "subfolder": "",
+    "type": "Word",
+    "extension": "docx",
+    "sizeBytes": 44302,
+    "updated": "2025-12-07",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20PRAKTIJKKOMPAS/Stap%201%20'BPV%20INFORMATIE%20MBT%20HET%20OPLEIDINGSPLAN'.docx"
+  },
+  {
+    "id": "bpv-info-091",
+    "title": "Stap 1 'BPV INFORMATIE MBT HET OPLEIDINGSPLAN'",
+    "fileName": "Stap 1 'BPV INFORMATIE MBT HET OPLEIDINGSPLAN'.pdf",
+    "category": "BPV PRAKTIJKKOMPAS",
+    "subfolder": "",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 200900,
+    "updated": "2025-12-07",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20PRAKTIJKKOMPAS/Stap%201%20'BPV%20INFORMATIE%20MBT%20HET%20OPLEIDINGSPLAN'.pdf"
+  },
+  {
+    "id": "bpv-info-092",
+    "title": "Stap 2 'BPV HULPMIDDEL OPSTELLEN OPLEIDINGSPLAN'",
+    "fileName": "Stap 2 'BPV HULPMIDDEL OPSTELLEN OPLEIDINGSPLAN'.docx",
+    "category": "BPV PRAKTIJKKOMPAS",
+    "subfolder": "",
+    "type": "Word",
+    "extension": "docx",
+    "sizeBytes": 45326,
+    "updated": "2025-10-22",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20PRAKTIJKKOMPAS/Stap%202%20'BPV%20HULPMIDDEL%20OPSTELLEN%20OPLEIDINGSPLAN'.docx"
+  },
+  {
+    "id": "bpv-info-093",
+    "title": "stap 2 'BPV HULPMIDDEL OPSTELLEN OPLEIDINGSPLAN'",
+    "fileName": "stap 2 'BPV HULPMIDDEL OPSTELLEN OPLEIDINGSPLAN'.pdf",
+    "category": "BPV PRAKTIJKKOMPAS",
+    "subfolder": "",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 158065,
+    "updated": "2025-10-22",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20PRAKTIJKKOMPAS/stap%202%20'BPV%20HULPMIDDEL%20OPSTELLEN%20OPLEIDINGSPLAN'.pdf"
+  },
+  {
+    "id": "bpv-info-094",
+    "title": "Stap 3 'BPV FORMAT OPLEIDINGSPLAN Leerjaar 1' Basis ",
+    "fileName": "Stap 3 'BPV FORMAT OPLEIDINGSPLAN Leerjaar 1' Basis .xlsx",
+    "category": "BPV PRAKTIJKKOMPAS",
+    "subfolder": "",
+    "type": "Excel",
+    "extension": "xlsx",
+    "sizeBytes": 123647,
+    "updated": "2025-12-16",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20PRAKTIJKKOMPAS/Stap%203%20'BPV%20FORMAT%20OPLEIDINGSPLAN%20Leerjaar%201'%20Basis%20.xlsx"
+  },
+  {
+    "id": "bpv-info-095",
+    "title": "Stap 3 'BPV FORMAT OPLEIDINGSPLAN Leerjaar 2' Gevorderd",
+    "fileName": "Stap 3 'BPV FORMAT OPLEIDINGSPLAN Leerjaar 2' Gevorderd.xlsx",
+    "category": "BPV PRAKTIJKKOMPAS",
+    "subfolder": "",
+    "type": "Excel",
+    "extension": "xlsx",
+    "sizeBytes": 123627,
+    "updated": "2025-12-08",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20PRAKTIJKKOMPAS/Stap%203%20'BPV%20FORMAT%20OPLEIDINGSPLAN%20Leerjaar%202'%20Gevorderd.xlsx"
+  },
+  {
+    "id": "bpv-info-096",
+    "title": "Stap 3 'BPV FORMAT OPLEIDINGSPLAN Leerjaar 3' Expert",
+    "fileName": "Stap 3 'BPV FORMAT OPLEIDINGSPLAN Leerjaar 3' Expert.xlsx",
+    "category": "BPV PRAKTIJKKOMPAS",
+    "subfolder": "",
+    "type": "Excel",
+    "extension": "xlsx",
+    "sizeBytes": 123627,
+    "updated": "2025-12-16",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20PRAKTIJKKOMPAS/Stap%203%20'BPV%20FORMAT%20OPLEIDINGSPLAN%20Leerjaar%203'%20Expert.xlsx"
+  },
+  {
+    "id": "bpv-info-097",
+    "title": "Stap 3 'BPV FORMAT OPLEIDINGSPLAN Leerjaar 4' Expert 'Uitsluitend MOH'",
+    "fileName": "Stap 3 'BPV FORMAT OPLEIDINGSPLAN Leerjaar 4' Expert 'Uitsluitend MOH'.xlsx",
+    "category": "BPV PRAKTIJKKOMPAS",
+    "subfolder": "",
+    "type": "Excel",
+    "extension": "xlsx",
+    "sizeBytes": 123628,
+    "updated": "2025-12-16",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20PRAKTIJKKOMPAS/Stap%203%20'BPV%20FORMAT%20OPLEIDINGSPLAN%20Leerjaar%204'%20Expert%20'Uitsluitend%20MOH'.xlsx"
+  },
+  {
+    "id": "bpv-info-098",
+    "title": "KICK-OFF Conferentie Nieuwe KD 'AHCR'",
+    "fileName": "KICK-OFF Conferentie Nieuwe KD 'AHCR'.pdf",
+    "category": "BPV PRESENTATIES",
+    "subfolder": "MINI CONFERENTIE Nieuwe KD 120526",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 1990721,
+    "updated": "2026-07-23",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20PRESENTATIES/MINI%20CONFERENTIE%20Nieuwe%20KD%20120526/KICK-OFF%20Conferentie%20Nieuwe%20KD%20'AHCR'.pdf"
+  },
+  {
+    "id": "bpv-info-099",
+    "title": "PRESENTATIE BEDIENING Oude KD vs Nieuwe KD",
+    "fileName": "PRESENTATIE BEDIENING Oude KD vs Nieuwe KD.pdf",
+    "category": "BPV PRESENTATIES",
+    "subfolder": "MINI CONFERENTIE Nieuwe KD 120526",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 1935577,
+    "updated": "2026-07-23",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20PRESENTATIES/MINI%20CONFERENTIE%20Nieuwe%20KD%20120526/PRESENTATIE%20BEDIENING%20Oude%20KD%20vs%20Nieuwe%20KD.pdf"
+  },
+  {
+    "id": "bpv-info-100",
+    "title": "PRESENTATIE KEUKEN Oude KD vs Nieuwe KD",
+    "fileName": "PRESENTATIE KEUKEN Oude KD vs Nieuwe KD.pdf",
+    "category": "BPV PRESENTATIES",
+    "subfolder": "MINI CONFERENTIE Nieuwe KD 120526",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 1766422,
+    "updated": "2026-07-23",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20PRESENTATIES/MINI%20CONFERENTIE%20Nieuwe%20KD%20120526/PRESENTATIE%20KEUKEN%20Oude%20KD%20vs%20Nieuwe%20KD.pdf"
+  },
+  {
+    "id": "bpv-info-101",
+    "title": "PRESENTATIE MANAGEMENT Oude KD vs Nieuwe KD",
+    "fileName": "PRESENTATIE MANAGEMENT Oude KD vs Nieuwe KD.pdf",
+    "category": "BPV PRESENTATIES",
+    "subfolder": "MINI CONFERENTIE Nieuwe KD 120526",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 1718328,
+    "updated": "2026-07-23",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20PRESENTATIES/MINI%20CONFERENTIE%20Nieuwe%20KD%20120526/PRESENTATIE%20MANAGEMENT%20Oude%20KD%20vs%20Nieuwe%20KD.pdf"
+  },
+  {
+    "id": "bpv-info-102",
+    "title": "BPV QR CHATGPT Kompas AHCR PO",
+    "fileName": "BPV QR CHATGPT Kompas AHCR PO.pdf",
+    "category": "BPV QR & LINKS",
+    "subfolder": "",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 219793,
+    "updated": "2026-07-20",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20QR%20%26%20LINKS/BPV%20QR%20CHATGPT%20Kompas%20AHCR%20PO.pdf"
+  },
+  {
+    "id": "bpv-info-103",
+    "title": "BPV QR CHATGPT PlanPro AHCR PO",
+    "fileName": "BPV QR CHATGPT PlanPro AHCR PO.pdf",
+    "category": "BPV QR & LINKS",
+    "subfolder": "",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 240511,
+    "updated": "2026-07-20",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20QR%20%26%20LINKS/BPV%20QR%20CHATGPT%20PlanPro%20AHCR%20PO.pdf"
+  },
+  {
+    "id": "bpv-info-104",
+    "title": "BPV QR FORMS Vacatures PO",
+    "fileName": "BPV QR FORMS Vacatures PO.pdf",
+    "category": "BPV QR & LINKS",
+    "subfolder": "",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 238718,
+    "updated": "2026-07-20",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20QR%20%26%20LINKS/BPV%20QR%20FORMS%20Vacatures%20PO.pdf"
+  },
+  {
+    "id": "bpv-info-105",
+    "title": "BPV QR ONEDRIVE Bibliotheek AHCR PO",
+    "fileName": "BPV QR ONEDRIVE Bibliotheek AHCR PO.pdf",
+    "category": "BPV QR & LINKS",
+    "subfolder": "",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 228949,
+    "updated": "2026-07-20",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20QR%20%26%20LINKS/BPV%20QR%20ONEDRIVE%20Bibliotheek%20AHCR%20PO.pdf"
+  },
+  {
+    "id": "bpv-info-106",
+    "title": "BPV QR PraktijkKompas AHCR",
+    "fileName": "BPV QR PraktijkKompas AHCR.pdf",
+    "category": "BPV QR & LINKS",
+    "subfolder": "",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 216055,
+    "updated": "2026-07-20",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20QR%20%26%20LINKS/BPV%20QR%20PraktijkKompas%20AHCR.pdf"
+  },
+  {
+    "id": "bpv-info-107",
+    "title": "BPV QR WebApp AHCR KD 2627",
+    "fileName": "BPV QR WebApp AHCR KD 2627.pdf",
+    "category": "BPV QR & LINKS",
+    "subfolder": "",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 220213,
+    "updated": "2026-07-20",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20QR%20%26%20LINKS/BPV%20QR%20WebApp%20AHCR%20KD%202627.pdf"
+  },
+  {
+    "id": "bpv-info-108",
+    "title": "BPV YOUTUBE Tutorials",
+    "fileName": "BPV YOUTUBE Tutorials.pdf",
+    "category": "BPV QR & LINKS",
+    "subfolder": "",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 103801,
+    "updated": "2025-08-08",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20QR%20%26%20LINKS/BPV%20YOUTUBE%20Tutorials.pdf"
+  },
+  {
+    "id": "bpv-info-109",
+    "title": "BPV INSTRUCTIES 'MijnSBB' Praktijkopleiders koppelen",
+    "fileName": "BPV INSTRUCTIES 'MijnSBB' Praktijkopleiders koppelen.pdf",
+    "category": "BPV SBB",
+    "subfolder": "",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 132157,
+    "updated": "2025-08-08",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20SBB/BPV%20INSTRUCTIES%20'MijnSBB'%20Praktijkopleiders%20koppelen.pdf"
+  },
+  {
+    "id": "bpv-info-110",
+    "title": "SBB BPV Flyer_Stagemarkt",
+    "fileName": "SBB BPV Flyer_Stagemarkt.pdf",
+    "category": "BPV SBB",
+    "subfolder": "",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 6541858,
+    "updated": "2025-06-14",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20SBB/SBB%20BPV%20Flyer_Stagemarkt.pdf"
+  },
+  {
+    "id": "bpv-info-111",
+    "title": "SBB BPV Formulier_(blanco)_Leerdoelen_en_Planning",
+    "fileName": "SBB BPV Formulier_(blanco)_Leerdoelen_en_Planning.pdf",
+    "category": "BPV SBB",
+    "subfolder": "",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 137886,
+    "updated": "2025-06-14",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20SBB/SBB%20BPV%20Formulier_(blanco)_Leerdoelen_en_Planning.pdf"
+  },
+  {
+    "id": "bpv-info-112",
+    "title": "SBB BPV Formulier_(blanco)_Ontwikkelingsgericht_Beoordelen",
+    "fileName": "SBB BPV Formulier_(blanco)_Ontwikkelingsgericht_Beoordelen.pdf",
+    "category": "BPV SBB",
+    "subfolder": "",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 153010,
+    "updated": "2025-06-14",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20SBB/SBB%20BPV%20Formulier_(blanco)_Ontwikkelingsgericht_Beoordelen.pdf"
+  },
+  {
+    "id": "bpv-info-113",
+    "title": "SBB BPV Formulier_BPV_Beleidsplan",
+    "fileName": "SBB BPV Formulier_BPV_Beleidsplan.pdf",
+    "category": "BPV SBB",
+    "subfolder": "",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 190135,
+    "updated": "2025-08-02",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20SBB/SBB%20BPV%20Formulier_BPV_Beleidsplan.pdf"
+  },
+  {
+    "id": "bpv-info-114",
+    "title": "SBB BPV Formulier_BPV_Plan",
+    "fileName": "SBB BPV Formulier_BPV_Plan.pdf",
+    "category": "BPV SBB",
+    "subfolder": "",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 228606,
+    "updated": "2025-06-14",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20SBB/SBB%20BPV%20Formulier_BPV_Plan.pdf"
+  },
+  {
+    "id": "bpv-info-115",
+    "title": "SBB BPV Formulier_Inwerkprogramma_[invulbaar]",
+    "fileName": "SBB BPV Formulier_Inwerkprogramma_[invulbaar].pdf",
+    "category": "BPV SBB",
+    "subfolder": "",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 260127,
+    "updated": "2025-06-14",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20SBB/SBB%20BPV%20Formulier_Inwerkprogramma_%5Binvulbaar%5D.pdf"
+  },
+  {
+    "id": "bpv-info-116",
+    "title": "SBB BPV Formulier_Voortgangsregistratie",
+    "fileName": "SBB BPV Formulier_Voortgangsregistratie.pdf",
+    "category": "BPV SBB",
+    "subfolder": "",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 87781,
+    "updated": "2025-06-14",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20SBB/SBB%20BPV%20Formulier_Voortgangsregistratie.pdf"
+  },
+  {
+    "id": "bpv-info-117",
+    "title": "SBB BPV Protocol 2024",
+    "fileName": "SBB BPV Protocol 2024.pdf",
+    "category": "BPV SBB",
+    "subfolder": "",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 279360,
+    "updated": "2025-06-14",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20SBB/SBB%20BPV%20Protocol%202024.pdf"
+  },
+  {
+    "id": "bpv-info-118",
+    "title": "SBB Rapportage-Meldingen-Stagediscriminatie-2023",
+    "fileName": "SBB Rapportage-Meldingen-Stagediscriminatie-2023.pdf",
+    "category": "BPV SBB",
+    "subfolder": "",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 1145268,
+    "updated": "2025-08-12",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20SBB/SBB%20Rapportage-Meldingen-Stagediscriminatie-2023.pdf"
+  },
+  {
+    "id": "bpv-info-119",
+    "title": "Tipkaart_Begeleiden_op_afstand",
+    "fileName": "Tipkaart_Begeleiden_op_afstand.pdf",
+    "category": "BPV SBB",
+    "subfolder": "TIPKAART SBB",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 266550,
+    "updated": "2025-06-14",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20SBB/TIPKAART%20SBB/Tipkaart_Begeleiden_op_afstand.pdf"
+  },
+  {
+    "id": "bpv-info-120",
+    "title": "Tipkaart_Begeleiden_op_maat",
+    "fileName": "Tipkaart_Begeleiden_op_maat.pdf",
+    "category": "BPV SBB",
+    "subfolder": "TIPKAART SBB",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 148371,
+    "updated": "2025-06-14",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20SBB/TIPKAART%20SBB/Tipkaart_Begeleiden_op_maat.pdf"
+  },
+  {
+    "id": "bpv-info-121",
+    "title": "Tipkaart_Begeleiden_van_volwassen_studenten",
+    "fileName": "Tipkaart_Begeleiden_van_volwassen_studenten.pdf",
+    "category": "BPV SBB",
+    "subfolder": "TIPKAART SBB",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 189178,
+    "updated": "2025-06-14",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20SBB/TIPKAART%20SBB/Tipkaart_Begeleiden_van_volwassen_studenten.pdf"
+  },
+  {
+    "id": "bpv-info-122",
+    "title": "Tipkaart_Begeleidingsgesprekken_voeren",
+    "fileName": "Tipkaart_Begeleidingsgesprekken_voeren.pdf",
+    "category": "BPV SBB",
+    "subfolder": "TIPKAART SBB",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 183423,
+    "updated": "2025-06-14",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20SBB/TIPKAART%20SBB/Tipkaart_Begeleidingsgesprekken_voeren.pdf"
+  },
+  {
+    "id": "bpv-info-123",
+    "title": "Tipkaart_Eerlijk_beoordelen",
+    "fileName": "Tipkaart_Eerlijk_beoordelen.pdf",
+    "category": "BPV SBB",
+    "subfolder": "TIPKAART SBB",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 379800,
+    "updated": "2025-06-14",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20SBB/TIPKAART%20SBB/Tipkaart_Eerlijk_beoordelen.pdf"
+  },
+  {
+    "id": "bpv-info-124",
+    "title": "Tipkaart_Feedback_geven",
+    "fileName": "Tipkaart_Feedback_geven.pdf",
+    "category": "BPV SBB",
+    "subfolder": "TIPKAART SBB",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 234655,
+    "updated": "2025-06-14",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20SBB/TIPKAART%20SBB/Tipkaart_Feedback_geven.pdf"
+  },
+  {
+    "id": "bpv-info-125",
+    "title": "Tipkaart_Generatieverschillen",
+    "fileName": "Tipkaart_Generatieverschillen.pdf",
+    "category": "BPV SBB",
+    "subfolder": "TIPKAART SBB",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 355911,
+    "updated": "2025-06-14",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20SBB/TIPKAART%20SBB/Tipkaart_Generatieverschillen.pdf"
+  },
+  {
+    "id": "bpv-info-126",
+    "title": "Tipkaart_Gespreksvoering",
+    "fileName": "Tipkaart_Gespreksvoering.pdf",
+    "category": "BPV SBB",
+    "subfolder": "TIPKAART SBB",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 227426,
+    "updated": "2025-06-14",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20SBB/TIPKAART%20SBB/Tipkaart_Gespreksvoering.pdf"
+  },
+  {
+    "id": "bpv-info-127",
+    "title": "Tipkaart_Instructie_geven",
+    "fileName": "Tipkaart_Instructie_geven.pdf",
+    "category": "BPV SBB",
+    "subfolder": "TIPKAART SBB",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 391041,
+    "updated": "2025-06-14",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20SBB/TIPKAART%20SBB/Tipkaart_Instructie_geven.pdf"
+  },
+  {
+    "id": "bpv-info-128",
+    "title": "Tipkaart_Inwerkprogramma",
+    "fileName": "Tipkaart_Inwerkprogramma.pdf",
+    "category": "BPV SBB",
+    "subfolder": "TIPKAART SBB",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 198825,
+    "updated": "2025-06-14",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20SBB/TIPKAART%20SBB/Tipkaart_Inwerkprogramma.pdf"
+  },
+  {
+    "id": "bpv-info-129",
+    "title": "Tipkaart_Leerdoelen",
+    "fileName": "Tipkaart_Leerdoelen.pdf",
+    "category": "BPV SBB",
+    "subfolder": "TIPKAART SBB",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 193298,
+    "updated": "2025-06-14",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20SBB/TIPKAART%20SBB/Tipkaart_Leerdoelen.pdf"
+  },
+  {
+    "id": "bpv-info-130",
+    "title": "Tipkaart_Leerklimaat",
+    "fileName": "Tipkaart_Leerklimaat.pdf",
+    "category": "BPV SBB",
+    "subfolder": "TIPKAART SBB",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 200378,
+    "updated": "2025-06-14",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20SBB/TIPKAART%20SBB/Tipkaart_Leerklimaat.pdf"
+  },
+  {
+    "id": "bpv-info-131",
+    "title": "Tipkaart_Motiveren",
+    "fileName": "Tipkaart_Motiveren.pdf",
+    "category": "BPV SBB",
+    "subfolder": "TIPKAART SBB",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 515506,
+    "updated": "2025-06-14",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20SBB/TIPKAART%20SBB/Tipkaart_Motiveren.pdf"
+  },
+  {
+    "id": "bpv-info-132",
+    "title": "Tipkaart_Reflectie",
+    "fileName": "Tipkaart_Reflectie.pdf",
+    "category": "BPV SBB",
+    "subfolder": "TIPKAART SBB",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 248331,
+    "updated": "2025-06-14",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20SBB/TIPKAART%20SBB/Tipkaart_Reflectie.pdf"
+  },
+  {
+    "id": "bpv-info-133",
+    "title": "Tipkaart_Sociale_veiligheid",
+    "fileName": "Tipkaart_Sociale_veiligheid.pdf",
+    "category": "BPV SBB",
+    "subfolder": "TIPKAART SBB",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 209886,
+    "updated": "2025-06-14",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20SBB/TIPKAART%20SBB/Tipkaart_Sociale_veiligheid.pdf"
+  },
+  {
+    "id": "bpv-info-134",
+    "title": "Tipkaart_Sollicitatiegesprek",
+    "fileName": "Tipkaart_Sollicitatiegesprek.pdf",
+    "category": "BPV SBB",
+    "subfolder": "TIPKAART SBB",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 234922,
+    "updated": "2025-06-14",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20SBB/TIPKAART%20SBB/Tipkaart_Sollicitatiegesprek.pdf"
+  },
+  {
+    "id": "bpv-info-135",
+    "title": "Tipkaart_Succesvolle_kenninsmaking",
+    "fileName": "Tipkaart_Succesvolle_kenninsmaking.pdf",
+    "category": "BPV SBB",
+    "subfolder": "TIPKAART SBB",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 286719,
+    "updated": "2025-06-14",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20SBB/TIPKAART%20SBB/Tipkaart_Succesvolle_kenninsmaking.pdf"
+  },
+  {
+    "id": "bpv-info-136",
+    "title": "Tipkaart_Veilig_en_gezond_werken",
+    "fileName": "Tipkaart_Veilig_en_gezond_werken.pdf",
+    "category": "BPV SBB",
+    "subfolder": "TIPKAART SBB",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 281260,
+    "updated": "2025-06-14",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20SBB/TIPKAART%20SBB/Tipkaart_Veilig_en_gezond_werken.pdf"
+  },
+  {
+    "id": "bpv-info-137",
+    "title": "BPV E-LEARNING Praktijkbeoordelaar",
+    "fileName": "BPV E-LEARNING Praktijkbeoordelaar.pdf",
+    "category": "BPV SCHOLING & TRAININGEN",
+    "subfolder": "",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 121801,
+    "updated": "2026-07-23",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20SCHOLING%20%26%20TRAININGEN/BPV%20E-LEARNING%20Praktijkbeoordelaar.pdf"
+  },
+  {
+    "id": "bpv-info-138",
+    "title": "BPV SCHOOLPERIODE KALENDER BBL BLJ 1e, 2e en 3e jaars 2627",
+    "fileName": "BPV SCHOOLPERIODE KALENDER BBL BLJ 1e, 2e en 3e jaars 2627.pdf",
+    "category": "BPV STAGE-KALENDERS",
+    "subfolder": "",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 282386,
+    "updated": "2026-06-29",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20STAGE-KALENDERS/BPV%20SCHOOLPERIODE%20KALENDER%20BBL%20BLJ%201e%2C%202e%20en%203e%20jaars%202627.pdf"
+  },
+  {
+    "id": "bpv-info-139",
+    "title": "BPV SCHOOLPERIODE KALENDER BBL RSS 1e, 2e en 3e jaars 2627",
+    "fileName": "BPV SCHOOLPERIODE KALENDER BBL RSS 1e, 2e en 3e jaars 2627.pdf",
+    "category": "BPV STAGE-KALENDERS",
+    "subfolder": "",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 282359,
+    "updated": "2026-06-24",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20STAGE-KALENDERS/BPV%20SCHOOLPERIODE%20KALENDER%20BBL%20RSS%201e%2C%202e%20en%203e%20jaars%202627.pdf"
+  },
+  {
+    "id": "bpv-info-140",
+    "title": "BPV STAGEPERIODE KALENDER BOL 1e jaars 2627",
+    "fileName": "BPV STAGEPERIODE KALENDER BOL 1e jaars 2627.pdf",
+    "category": "BPV STAGE-KALENDERS",
+    "subfolder": "",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 282291,
+    "updated": "2026-06-24",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20STAGE-KALENDERS/BPV%20STAGEPERIODE%20KALENDER%20BOL%201e%20jaars%202627.pdf"
+  },
+  {
+    "id": "bpv-info-141",
+    "title": "BPV STAGEPERIODE KALENDER BOL 2e jaars (1) 2627",
+    "fileName": "BPV STAGEPERIODE KALENDER BOL 2e jaars (1) 2627.pdf",
+    "category": "BPV STAGE-KALENDERS",
+    "subfolder": "",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 284893,
+    "updated": "2026-06-24",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20STAGE-KALENDERS/BPV%20STAGEPERIODE%20KALENDER%20BOL%202e%20jaars%20(1)%202627.pdf"
+  },
+  {
+    "id": "bpv-info-142",
+    "title": "BPV STAGEPERIODE KALENDER BOL 2e jaars (2) 2627",
+    "fileName": "BPV STAGEPERIODE KALENDER BOL 2e jaars (2) 2627.pdf",
+    "category": "BPV STAGE-KALENDERS",
+    "subfolder": "",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 285470,
+    "updated": "2026-06-24",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20STAGE-KALENDERS/BPV%20STAGEPERIODE%20KALENDER%20BOL%202e%20jaars%20(2)%202627.pdf"
+  },
+  {
+    "id": "bpv-info-143",
+    "title": "BPV STAGEPERIODE KALENDER BOL 3e jaars 2627",
+    "fileName": "BPV STAGEPERIODE KALENDER BOL 3e jaars 2627.pdf",
+    "category": "BPV STAGE-KALENDERS",
+    "subfolder": "",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 283986,
+    "updated": "2026-06-25",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20STAGE-KALENDERS/BPV%20STAGEPERIODE%20KALENDER%20BOL%203e%20jaars%202627.pdf"
+  },
+  {
+    "id": "bpv-info-144",
+    "title": "BPV STAGEPERIODE KALENDER BOL 4e jaars 2627",
+    "fileName": "BPV STAGEPERIODE KALENDER BOL 4e jaars 2627.pdf",
+    "category": "BPV STAGE-KALENDERS",
+    "subfolder": "",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 284353,
+    "updated": "2026-06-24",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20STAGE-KALENDERS/BPV%20STAGEPERIODE%20KALENDER%20BOL%204e%20jaars%202627.pdf"
+  }
+];
+
+const bpvInfoState = {
+  documents: [],
+  filtered: [],
+  selectedId: null,
+  initialized: false,
+};
+
+const bpvInfoElements = {
+  search: document.querySelector("#bpvInfoSearch"),
+  category: document.querySelector("#bpvInfoCategory"),
+  type: document.querySelector("#bpvInfoType"),
+  list: document.querySelector("#bpvInfoList"),
+  count: document.querySelector("#bpvInfoCount"),
+  total: document.querySelector("#bpvInfoTotal"),
+  previewTitle: document.querySelector("#bpv-info-preview-title"),
+  previewMeta: document.querySelector("#bpvInfoPreviewMeta"),
+  previewFrame: document.querySelector("#bpvInfoPreviewFrame"),
+  actions: document.querySelector("#bpvInfoActions"),
+  reset: document.querySelector("#bpvInfoReset"),
+};
+
+function formatInfoSize(bytes) {
+  if (!bytes) return "";
+  if (bytes > 1024 * 1024) return `${(bytes / 1024 / 1024).toFixed(1).replace(".", ",")} MB`;
+  return `${Math.max(1, Math.round(bytes / 1024))} KB`;
+}
+
+function documentIcon(type) {
+  const icons = { PDF: "PDF", Word: "DOC", PowerPoint: "PPT", Excel: "XLS", Video: "VID", Afbeelding: "IMG" };
+  return icons[type] || "DOC";
+}
+
+function openPrimaryTab(tabName) {
+  primaryTabs.forEach((tab) => tab.classList.toggle("is-active", tab.dataset.primaryTab === tabName));
+  const showInfo = tabName === "info";
+  if (bpvInfoView) bpvInfoView.classList.toggle("is-hidden", !showInfo);
+  if (landingView) landingView.classList.toggle("is-hidden", showInfo);
+  if (directionView) directionView.classList.add("is-hidden");
+  if (workprocessView) workprocessView.classList.add("is-hidden");
+  if (showInfo) {
+    currentDirection = null;
+    headerSubtitle.textContent = translations[currentLanguage].tabInfo;
+    initBpvInfoDashboard();
+  } else {
+    currentDirection = null;
+    headerSubtitle.textContent = translations[currentLanguage].appSubtitle;
+  }
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+async function initBpvInfoDashboard() {
+  if (!bpvInfoView || bpvInfoState.initialized) return;
+  try {
+    bpvInfoState.documents = Array.isArray(bpvInfoDocumentIndex) ? bpvInfoDocumentIndex : [];
+    if (!bpvInfoState.documents.length) {
+      const response = await fetch("bpv-info-documents.json?v=20260724-bpv-info");
+      bpvInfoState.documents = await response.json();
+    }
+    bpvInfoState.filtered = bpvInfoState.documents;
+    bpvInfoState.selectedId = bpvInfoState.documents[0]?.id || null;
+    fillBpvInfoFilters();
+    renderBpvInfoDashboard();
+    bpvInfoState.initialized = true;
+  } catch (error) {
+    if (bpvInfoElements.list) {
+      bpvInfoElements.list.innerHTML = `<div class="bpv-info-empty">De documentindex kon niet worden geladen. Controleer of app.js en bpv-info-documents.json zijn ververst.</div>`;
+    }
+  }
+}
+
+function fillBpvInfoFilters() {
+  const categories = [...new Set(bpvInfoState.documents.map((item) => item.category))].sort((a, b) => a.localeCompare(b, "nl"));
+  const selectedCategory = bpvInfoElements.category?.value || "all";
+  const selectedDocument = bpvInfoElements.type?.value || "all";
+  if (bpvInfoElements.category) {
+    bpvInfoElements.category.innerHTML = `<option value="all">${translations[currentLanguage].infoAllCategories}</option>${categories.map((category) => `<option value="${escapeHtml(category)}">${escapeHtml(category)}</option>`).join("")}`;
+    bpvInfoElements.category.value = categories.includes(selectedCategory) ? selectedCategory : "all";
+  }
+  const activeCategory = bpvInfoElements.category?.value || "all";
+  const documentsForSelect = bpvInfoState.documents
+    .filter((item) => activeCategory === "all" || item.category === activeCategory)
+    .sort((a, b) => a.title.localeCompare(b.title, "nl"));
+  if (bpvInfoElements.type) {
+    bpvInfoElements.type.innerHTML = `<option value="all">${translations[currentLanguage].infoAllDocuments}</option>${documentsForSelect.map((item) => `<option value="${escapeHtml(item.id)}">${escapeHtml(item.title)}</option>`).join("")}`;
+    bpvInfoElements.type.value = documentsForSelect.some((item) => item.id === selectedDocument) ? selectedDocument : "all";
+  }
+}
+
+function filterBpvInfoDocuments() {
+  const query = (bpvInfoElements.search?.value || "").trim().toLowerCase();
+  const category = bpvInfoElements.category?.value || "all";
+  const selectedDocument = bpvInfoElements.type?.value || "all";
+  bpvInfoState.filtered = bpvInfoState.documents.filter((item) => {
+    const haystack = `${item.title} ${item.fileName} ${item.category} ${item.subfolder} ${item.type}`.toLowerCase();
+    return (!query || haystack.includes(query)) && (category === "all" || item.category === category) && (selectedDocument === "all" || item.id === selectedDocument);
+  });
+  if (!bpvInfoState.filtered.some((item) => item.id === bpvInfoState.selectedId)) {
+    bpvInfoState.selectedId = bpvInfoState.filtered[0]?.id || null;
+  }
+  renderBpvInfoDashboard();
+}
+
+
+function resetBpvInfoFilters() {
+  if (bpvInfoElements.search) bpvInfoElements.search.value = "";
+  if (bpvInfoElements.category) bpvInfoElements.category.value = "all";
+  fillBpvInfoFilters();
+  if (bpvInfoElements.type) bpvInfoElements.type.value = "all";
+  bpvInfoState.filtered = bpvInfoState.documents;
+  bpvInfoState.selectedId = bpvInfoState.documents[0]?.id || null;
+  renderBpvInfoDashboard();
+}
+function renderBpvInfoDashboard() {
+  if (!bpvInfoView || !bpvInfoElements.list) return;
+  if (bpvInfoElements.total) bpvInfoElements.total.textContent = String(bpvInfoState.documents.length || 0);
+  if (bpvInfoElements.count) {
+    const amount = bpvInfoState.filtered.length;
+    bpvInfoElements.count.textContent = `${amount} ${currentLanguage === "en" ? "documents" : "documenten"}`;
+  }
+  if (!bpvInfoState.filtered.length) {
+    bpvInfoElements.list.innerHTML = `<div class="bpv-info-empty">${translations[currentLanguage].infoNoResults}</div>`;
+    renderBpvInfoPreview(null);
+    return;
+  }
+  bpvInfoElements.list.innerHTML = bpvInfoState.filtered.map((item) => `
+    <article class="bpv-info-card${item.id === bpvInfoState.selectedId ? " is-selected" : ""}" data-document-id="${item.id}" tabindex="0" role="button">
+      <span class="bpv-info-file-icon">${documentIcon(item.type)}</span>
+      <div class="bpv-info-card-main">
+        <h4>${escapeHtml(item.title)}</h4>
+        <p>${escapeHtml(item.category)}${item.subfolder ? ` / ${escapeHtml(item.subfolder)}` : ""}</p>
+        <div class="bpv-info-tags"><span>${escapeHtml(item.type)}</span><span>${formatInfoSize(item.sizeBytes)}</span><span>${escapeHtml(item.updated)}</span></div>
+      </div>
+      <span class="bpv-info-arrow" aria-hidden="true">›</span>
+    </article>
+  `).join("");
+  renderBpvInfoPreview(bpvInfoState.filtered.find((item) => item.id === bpvInfoState.selectedId) || bpvInfoState.filtered[0]);
+}
+
+function renderBpvInfoPreview(item) {
+  if (!bpvInfoElements.previewTitle || !bpvInfoElements.previewFrame || !bpvInfoElements.actions) return;
+  if (!item) {
+    bpvInfoElements.previewTitle.textContent = translations[currentLanguage].infoPreviewTitle;
+    bpvInfoElements.previewMeta.textContent = translations[currentLanguage].infoPreviewEmpty;
+    bpvInfoElements.previewFrame.innerHTML = "";
+    bpvInfoElements.actions.innerHTML = "";
+    return;
+  }
+  bpvInfoState.selectedId = item.id;
+  bpvInfoElements.previewTitle.textContent = item.title;
+  bpvInfoElements.previewMeta.textContent = `${item.category}${item.subfolder ? ` / ${item.subfolder}` : ""} · ${item.type} · ${formatInfoSize(item.sizeBytes)}`;
+  if (item.type === "PDF") {
+    bpvInfoElements.previewFrame.innerHTML = `<iframe src="${item.url}#toolbar=0&navpanes=0&scrollbar=1&view=FitH&zoom=page-width" title="Preview ${escapeHtml(item.title)}"></iframe>`;
+  } else if (item.type === "Afbeelding") {
+    bpvInfoElements.previewFrame.innerHTML = `<img src="${item.url}" alt="${escapeHtml(item.title)}" />`;
+  } else if (item.type === "Video") {
+    bpvInfoElements.previewFrame.innerHTML = `<video src="${item.url}" controls></video>`;
+  } else {
+    bpvInfoElements.previewFrame.innerHTML = `<div class="bpv-info-preview-empty"><strong>${escapeHtml(item.type)}</strong><p>${translations[currentLanguage].infoPreviewUnavailable}</p></div>`;
+  }
+  bpvInfoElements.actions.innerHTML = `
+    <a class="bpv-info-action primary" href="${item.url}" target="_blank" rel="noopener">${translations[currentLanguage].infoOpenDocument}</a>
+  `;
+  bpvInfoElements.list?.querySelectorAll(".bpv-info-card").forEach((card) => card.classList.toggle("is-selected", card.dataset.documentId === item.id));
+}
+
+primaryTabs.forEach((tab) => {
+  tab.addEventListener("click", () => openPrimaryTab(tab.dataset.primaryTab));
+});
+
+if (bpvInfoElements.search) bpvInfoElements.search.addEventListener("input", filterBpvInfoDocuments);
+if (bpvInfoElements.category) bpvInfoElements.category.addEventListener("change", () => { fillBpvInfoFilters(); filterBpvInfoDocuments(); });
+if (bpvInfoElements.type) bpvInfoElements.type.addEventListener("change", filterBpvInfoDocuments);
+if (bpvInfoElements.reset) bpvInfoElements.reset.addEventListener("click", resetBpvInfoFilters);
+if (bpvInfoElements.list) {
+  bpvInfoElements.list.addEventListener("click", (event) => {
+    const card = event.target.closest(".bpv-info-card");
+    if (!card) return;
+    renderBpvInfoPreview(bpvInfoState.filtered.find((item) => item.id === card.dataset.documentId));
+  });
+  bpvInfoElements.list.addEventListener("keydown", (event) => {
+    if (event.key !== "Enter" && event.key !== " ") return;
+    const card = event.target.closest(".bpv-info-card");
+    if (!card) return;
+    event.preventDefault();
+    renderBpvInfoPreview(bpvInfoState.filtered.find((item) => item.id === card.dataset.documentId));
+  });
+}
 translatePage(currentLanguage);
 
 
@@ -4327,3 +6302,15 @@ function initDevicePopup() {
 }
 
 initDevicePopup();
+
+
+
+
+
+
+
+
+
+
+
+
