@@ -4324,7 +4324,17 @@ if (breadcrumbDomain) breadcrumbDomain.addEventListener("click", showDirectionVi
 languageButtons.forEach((button) => {
   button.addEventListener("click", () => {
     currentLanguage = button.dataset.lang;
-    translatePage(currentLanguage);
+    
+let bpvInfoResizeTimer;
+window.addEventListener("resize", () => {
+  if (!bpvInfoView || bpvInfoView.classList.contains("is-hidden") || !bpvInfoState.selectedId) return;
+  window.clearTimeout(bpvInfoResizeTimer);
+  bpvInfoResizeTimer = window.setTimeout(() => {
+    const selected = bpvInfoState.documents.find((item) => item.id === bpvInfoState.selectedId);
+    if (selected?.type === "PDF") renderBpvInfoPreview(selected);
+  }, 180);
+});
+translatePage(currentLanguage);
   });
 });
 
@@ -6201,6 +6211,13 @@ function renderBpvInfoDashboard() {
   renderBpvInfoPreview(bpvInfoState.filtered.find((item) => item.id === bpvInfoState.selectedId) || bpvInfoState.filtered[0]);
 }
 
+function bpvInfoPdfPreviewUrl(url) {
+  const isCompact = window.matchMedia("(max-width: 760px)").matches;
+  const fragment = isCompact
+    ? "toolbar=0&navpanes=0&scrollbar=1&view=Fit&zoom=page-fit"
+    : "toolbar=0&navpanes=0&scrollbar=1&view=FitH&zoom=page-width";
+  return `${url}#${fragment}`;
+}
 function renderBpvInfoPreview(item) {
   if (!bpvInfoElements.previewTitle || !bpvInfoElements.previewFrame || !bpvInfoElements.actions) return;
   if (!item) {
@@ -6214,7 +6231,7 @@ function renderBpvInfoPreview(item) {
   bpvInfoElements.previewTitle.textContent = item.title;
   bpvInfoElements.previewMeta.textContent = `${item.category}${item.subfolder ? ` / ${item.subfolder}` : ""} · ${item.type} · ${formatInfoSize(item.sizeBytes)}`;
   if (item.type === "PDF") {
-    bpvInfoElements.previewFrame.innerHTML = `<iframe src="${item.url}#toolbar=0&navpanes=0&scrollbar=1&view=FitH&zoom=page-width" title="Preview ${escapeHtml(item.title)}"></iframe>`;
+    bpvInfoElements.previewFrame.innerHTML = `<iframe src="${bpvInfoPdfPreviewUrl(item.url)}" title="Preview ${escapeHtml(item.title)}"></iframe>`;
   } else if (item.type === "Afbeelding") {
     bpvInfoElements.previewFrame.innerHTML = `<img src="${item.url}" alt="${escapeHtml(item.title)}" />`;
   } else if (item.type === "Video") {
@@ -6250,6 +6267,16 @@ if (bpvInfoElements.list) {
     renderBpvInfoPreview(bpvInfoState.filtered.find((item) => item.id === card.dataset.documentId));
   });
 }
+
+let bpvInfoResizeTimer;
+window.addEventListener("resize", () => {
+  if (!bpvInfoView || bpvInfoView.classList.contains("is-hidden") || !bpvInfoState.selectedId) return;
+  window.clearTimeout(bpvInfoResizeTimer);
+  bpvInfoResizeTimer = window.setTimeout(() => {
+    const selected = bpvInfoState.documents.find((item) => item.id === bpvInfoState.selectedId);
+    if (selected?.type === "PDF") renderBpvInfoPreview(selected);
+  }, 180);
+});
 translatePage(currentLanguage);
 
 
@@ -6302,6 +6329,7 @@ function initDevicePopup() {
 }
 
 initDevicePopup();
+
 
 
 
