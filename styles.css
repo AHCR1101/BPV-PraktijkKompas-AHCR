@@ -4021,3 +4021,155 @@ footer {
 .bpv-info-action.primary {
   width: 100% !important;
 }
+
+/* Mobiele stabiliteit BPV Info: geen horizontale swipe */
+html,
+body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+#bpvInfoView,
+#bpvInfoView * {
+  box-sizing: border-box;
+}
+
+#bpvInfoView {
+  width: 100% !important;
+  max-width: 1100px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  overflow-x: hidden !important;
+}
+
+.bpv-info-view,
+.bpv-info-dashboard,
+.bpv-info-layout,
+.bpv-info-hero,
+.bpv-info-toolbar,
+.bpv-info-list-panel,
+.bpv-info-preview,
+.bpv-info-preview-head,
+.bpv-info-preview-frame,
+.bpv-info-actions,
+.bpv-info-list,
+.bpv-info-card {
+  max-width: 100% !important;
+  min-width: 0 !important;
+}
+
+.bpv-info-preview {
+  width: 100% !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  transform: none !important;
+}
+
+.bpv-info-controls {
+  width: 100% !important;
+  max-width: 100% !important;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto !important;
+}
+
+.info-field,
+.info-field input,
+.info-field select {
+  min-width: 0 !important;
+  max-width: 100% !important;
+}
+
+.bpv-info-card-main,
+.bpv-info-card h4,
+.bpv-info-card p {
+  min-width: 0 !important;
+  overflow-wrap: anywhere;
+}
+
+.bpv-info-preview-frame {
+  height: clamp(520px, 72vh, 780px) !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+}
+
+.bpv-info-preview-frame iframe,
+.bpv-info-preview-frame img,
+.bpv-info-preview-frame video {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+}
+
+@media (max-width: 760px) {
+  main,
+  #landingView,
+  #directionView,
+  #workprocessView,
+  #bpvInfoView {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+    overflow-x: hidden !important;
+  }
+
+  .primary-tabs-shell,
+  .primary-tabs,
+  .bpv-info-view,
+  .bpv-info-dashboard,
+  .bpv-info-layout,
+  .bpv-info-hero,
+  .bpv-info-toolbar,
+  .bpv-info-list-panel,
+  .bpv-info-preview {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  .primary-tabs {
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+
+  .bpv-info-controls {
+    grid-template-columns: 1fr !important;
+  }
+
+  .bpv-info-hero {
+    grid-template-columns: 1fr !important;
+  }
+
+  .bpv-info-stat {
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .bpv-info-card {
+    grid-template-columns: 44px minmax(0, 1fr) !important;
+  }
+
+  .bpv-info-preview {
+    padding: 10px !important;
+  }
+
+  .bpv-info-preview-frame {
+    height: min(70vh, 620px) !important;
+    min-height: 430px !important;
+  }
+}
+
+@media (max-width: 420px) {
+  main,
+  #bpvInfoView {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+  }
+
+  .bpv-info-preview-frame {
+    height: 64vh !important;
+    min-height: 380px !important;
+  }
+}
