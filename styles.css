@@ -4173,3 +4173,39 @@ body {
     min-height: 380px !important;
   }
 }
+
+/* Mobiel/tablet: geen PDF iframe, maar stabiele documentkaart */
+.bpv-info-mobile-preview-card {
+  min-height: 240px;
+  display: grid;
+  grid-template-columns: 56px minmax(0, 1fr);
+  gap: 14px;
+  align-items: center;
+  padding: 18px;
+  background: linear-gradient(135deg, rgba(10, 98, 175, 0.08), rgba(255, 255, 255, 0.94));
+  color: var(--ink);
+}
+
+.bpv-info-mobile-preview-card strong {
+  display: block;
+  color: var(--blue);
+  font-size: 18px;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+.bpv-info-mobile-preview-card p,
+.bpv-info-mobile-preview-card small {
+  display: block;
+  margin: 8px 0 0;
+  color: var(--muted);
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 900px), (pointer: coarse) {
+  .bpv-info-preview-frame:has(.bpv-info-mobile-preview-card) {
+    height: auto !important;
+    min-height: 240px !important;
+  }
+}

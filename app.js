@@ -6211,6 +6211,22 @@ function renderBpvInfoDashboard() {
   renderBpvInfoPreview(bpvInfoState.filtered.find((item) => item.id === bpvInfoState.selectedId) || bpvInfoState.filtered[0]);
 }
 
+function isBpvInfoCompactPreview() {
+  return window.matchMedia("(max-width: 900px), (pointer: coarse)").matches;
+}
+
+function bpvInfoMobilePreviewCard(item) {
+  return `
+    <div class="bpv-info-mobile-preview-card">
+      <span class="bpv-info-file-icon">${documentIcon(item.type)}</span>
+      <div>
+        <strong>${escapeHtml(item.title)}</strong>
+        <p>${escapeHtml(item.category)}${item.subfolder ? ` / ${escapeHtml(item.subfolder)}` : ""}</p>
+        <small>${escapeHtml(item.type)} · ${formatInfoSize(item.sizeBytes)}</small>
+      </div>
+    </div>
+  `;
+}
 function bpvInfoPdfPreviewUrl(url) {
   const isCompact = window.matchMedia("(max-width: 760px)").matches;
   const fragment = isCompact
@@ -6329,6 +6345,7 @@ function initDevicePopup() {
 }
 
 initDevicePopup();
+
 
 
 
