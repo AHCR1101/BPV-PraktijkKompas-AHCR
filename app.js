@@ -6212,7 +6212,9 @@ function renderBpvInfoDashboard() {
 }
 
 function isBpvInfoCompactPreview() {
-  return window.matchMedia("(max-width: 900px), (pointer: coarse)").matches;
+  const viewportWidth = Math.min(window.innerWidth || 0, document.documentElement.clientWidth || 0) || window.innerWidth;
+  const hasTouch = window.matchMedia("(pointer: coarse)").matches || navigator.maxTouchPoints > 0;
+  return viewportWidth <= 1024 || hasTouch;
 }
 
 function bpvInfoMobilePreviewCard(item) {
@@ -6345,6 +6347,7 @@ function initDevicePopup() {
 }
 
 initDevicePopup();
+
 
 
 

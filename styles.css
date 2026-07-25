@@ -4209,3 +4209,36 @@ body {
     min-height: 240px !important;
   }
 }
+
+/* Mobiel/tablet: documentkaart zichtbaar tot tabletbreedte */
+@media (max-width: 1024px), (pointer: coarse) {
+  .bpv-info-preview-frame:has(.bpv-info-mobile-preview-card) {
+    height: auto !important;
+    min-height: 240px !important;
+  }
+}
+
+/* BPV Info: geselecteerd document duidelijk blauw markeren */
+.bpv-info-card.is-selected {
+  background: var(--blue) !important;
+  border-color: var(--blue) !important;
+  color: var(--white) !important;
+  box-shadow: 0 14px 30px rgba(10, 98, 175, 0.22) !important;
+}
+
+.bpv-info-card.is-selected h4,
+.bpv-info-card.is-selected p,
+.bpv-info-card.is-selected .bpv-info-arrow {
+  color: var(--white) !important;
+}
+
+.bpv-info-card.is-selected .bpv-info-file-icon {
+  background: var(--orange) !important;
+  color: var(--white) !important;
+  border-bottom-color: rgba(255, 255, 255, 0.65) !important;
+}
+
+.bpv-info-card.is-selected .bpv-info-tags span {
+  background: rgba(255, 255, 255, 0.18) !important;
+  color: var(--white) !important;
+}
