@@ -6070,6 +6070,114 @@ const bpvInfoDocumentIndex = [
     "sizeBytes": 284353,
     "updated": "2026-06-24",
     "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20STAGE-KALENDERS/BPV%20STAGEPERIODE%20KALENDER%20BOL%204e%20jaars%202627.pdf"
+  },
+  {
+    "id": "bpv-info-145",
+    "title": "CURRICULUM POSTER Gastheer-Vrouw Cohort 238",
+    "fileName": "CURRICULUM POSTER Gastheer-Vrouw Cohort 238.pdf",
+    "category": "BPV CURRICULUM POSTERS COHORT 238",
+    "subfolder": "",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 275994,
+    "updated": "2026-07-30",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20CURRICULUM%20POSTERS%20COHORT%20238/CURRICULUM%20POSTER%20Gastheer-Vrouw%20Cohort%20238.pdf"
+  },
+  {
+    "id": "bpv-info-146",
+    "title": "CURRICULUM POSTER Gespecialiseerd Kok Cohort 238",
+    "fileName": "CURRICULUM POSTER Gespecialiseerd Kok Cohort 238.pdf",
+    "category": "BPV CURRICULUM POSTERS COHORT 238",
+    "subfolder": "",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 264737,
+    "updated": "2026-07-30",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20CURRICULUM%20POSTERS%20COHORT%20238/CURRICULUM%20POSTER%20Gespecialiseerd%20Kok%20Cohort%20238.pdf"
+  },
+  {
+    "id": "bpv-info-147",
+    "title": "CURRICULUM POSTER Kok Cohort 238",
+    "fileName": "CURRICULUM POSTER Kok Cohort 238.pdf",
+    "category": "BPV CURRICULUM POSTERS COHORT 238",
+    "subfolder": "",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 258683,
+    "updated": "2026-07-30",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20CURRICULUM%20POSTERS%20COHORT%20238/CURRICULUM%20POSTER%20Kok%20Cohort%20238.pdf"
+  },
+  {
+    "id": "bpv-info-148",
+    "title": "CURRICULUM POSTER Leidinggevende Bediening Cohort 238",
+    "fileName": "CURRICULUM POSTER Leidinggevende Bediening Cohort 238.pdf",
+    "category": "BPV CURRICULUM POSTERS COHORT 238",
+    "subfolder": "",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 286146,
+    "updated": "2026-07-30",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20CURRICULUM%20POSTERS%20COHORT%20238/CURRICULUM%20POSTER%20Leidinggevende%20Bediening%20Cohort%20238.pdf"
+  },
+  {
+    "id": "bpv-info-149",
+    "title": "CURRICULUM POSTER Leidinggevende Keuken Cohort 238",
+    "fileName": "CURRICULUM POSTER Leidinggevende Keuken Cohort 238.pdf",
+    "category": "BPV CURRICULUM POSTERS COHORT 238",
+    "subfolder": "",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 268765,
+    "updated": "2026-07-30",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20CURRICULUM%20POSTERS%20COHORT%20238/CURRICULUM%20POSTER%20Leidinggevende%20Keuken%20Cohort%20238.pdf"
+  },
+  {
+    "id": "bpv-info-150",
+    "title": "CURRICULUM POSTER Manager Ondernemer Horeca Cohort 238",
+    "fileName": "CURRICULUM POSTER Manager Ondernemer Horeca Cohort 238.pdf",
+    "category": "BPV CURRICULUM POSTERS COHORT 238",
+    "subfolder": "",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 293561,
+    "updated": "2026-07-30",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20CURRICULUM%20POSTERS%20COHORT%20238/CURRICULUM%20POSTER%20Manager%20Ondernemer%20Horeca%20Cohort%20238.pdf"
+  },
+  {
+    "id": "bpv-info-151",
+    "title": "CURRICULUM POSTER Meewerkend Horeca Ondernemer Cohort 238",
+    "fileName": "CURRICULUM POSTER Meewerkend Horeca Ondernemer Cohort 238.pdf",
+    "category": "BPV CURRICULUM POSTERS COHORT 238",
+    "subfolder": "",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 276323,
+    "updated": "2026-07-30",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20CURRICULUM%20POSTERS%20COHORT%20238/CURRICULUM%20POSTER%20Meewerkend%20Horeca%20Ondernemer%20Cohort%20238.pdf"
+  },
+  {
+    "id": "bpv-info-152",
+    "title": "CURRICULUM POSTER Zelfstandig Werkend Gastheer-Vrouw Cohort 238",
+    "fileName": "CURRICULUM POSTER Zelfstandig Werkend Gastheer-Vrouw Cohort 238.pdf",
+    "category": "BPV CURRICULUM POSTERS COHORT 238",
+    "subfolder": "",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 286365,
+    "updated": "2026-07-30",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20CURRICULUM%20POSTERS%20COHORT%20238/CURRICULUM%20POSTER%20Zelfstandig%20Werkend%20Gastheer-Vrouw%20Cohort%20238.pdf"
+  },
+  {
+    "id": "bpv-info-153",
+    "title": "CURRICULUM POSTER Zelfstandig Werkend Kok Cohort 238",
+    "fileName": "CURRICULUM POSTER Zelfstandig Werkend Kok Cohort 238.pdf",
+    "category": "BPV CURRICULUM POSTERS COHORT 238",
+    "subfolder": "",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 262021,
+    "updated": "2026-07-30",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20CURRICULUM%20POSTERS%20COHORT%20238/CURRICULUM%20POSTER%20Zelfstandig%20Werkend%20Kok%20Cohort%20238.pdf"
   }
 ];
 
