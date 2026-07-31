@@ -6344,6 +6344,16 @@ function bpvInfoPdfPreviewUrl(url) {
     : "toolbar=0&navpanes=0&scrollbar=1&view=FitH&zoom=page-width";
   return `${url}#${fragment}`;
 }
+
+function scrollBpvInfoPreviewIntoView() {
+  const preview = document.querySelector(".bpv-info-preview");
+  if (!preview || bpvInfoView?.classList.contains("is-hidden")) return;
+  window.requestAnimationFrame(() => {
+    const top = preview.getBoundingClientRect().top + window.scrollY - 12;
+    window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
+  });
+}
+
 function renderBpvInfoPreview(item) {
   if (!bpvInfoElements.previewTitle || !bpvInfoElements.previewFrame || !bpvInfoElements.actions) return;
   if (!item) {
@@ -6377,13 +6387,17 @@ primaryTabs.forEach((tab) => {
 
 if (bpvInfoElements.search) bpvInfoElements.search.addEventListener("input", filterBpvInfoDocuments);
 if (bpvInfoElements.category) bpvInfoElements.category.addEventListener("change", () => { fillBpvInfoFilters(); filterBpvInfoDocuments(); });
-if (bpvInfoElements.type) bpvInfoElements.type.addEventListener("change", filterBpvInfoDocuments);
+if (bpvInfoElements.type) bpvInfoElements.type.addEventListener("change", () => {
+  filterBpvInfoDocuments();
+  if (bpvInfoElements.type.value !== "all") scrollBpvInfoPreviewIntoView();
+});
 if (bpvInfoElements.reset) bpvInfoElements.reset.addEventListener("click", resetBpvInfoFilters);
 if (bpvInfoElements.list) {
   bpvInfoElements.list.addEventListener("click", (event) => {
     const card = event.target.closest(".bpv-info-card");
     if (!card) return;
     renderBpvInfoPreview(bpvInfoState.filtered.find((item) => item.id === card.dataset.documentId));
+    scrollBpvInfoPreviewIntoView();
   });
   bpvInfoElements.list.addEventListener("keydown", (event) => {
     if (event.key !== "Enter" && event.key !== " ") return;
@@ -6391,6 +6405,7 @@ if (bpvInfoElements.list) {
     if (!card) return;
     event.preventDefault();
     renderBpvInfoPreview(bpvInfoState.filtered.find((item) => item.id === card.dataset.documentId));
+    scrollBpvInfoPreviewIntoView();
   });
 }
 
