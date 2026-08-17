@@ -96,18 +96,6 @@
     "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20EXAMENWERK/BPV%20STAPPENPLAN%20Student%20Ontwikkelingsgericht%20Praktijkbeoordelen.pdf"
   },
   {
-    "id": "bpv-info-009",
-    "title": "BPV KOMPAS Nieuwe KD KOK+ crebo 27060 versie 250426",
-    "fileName": "BPV KOMPAS Nieuwe KD KOK+ crebo 27060 versie 250426.pdf",
-    "category": "BPV HANDLEIDINGEN",
-    "subfolder": "",
-    "type": "PDF",
-    "extension": "pdf",
-    "sizeBytes": 664396,
-    "updated": "2026-04-29",
-    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20HANDLEIDINGEN/BPV%20KOMPAS%20Nieuwe%20KD%20KOK%2B%20crebo%2027060%20versie%20250426.pdf"
-  },
-  {
     "id": "bpv-info-010",
     "title": "Nieuw Beroepsbeschrijving Leidinggevende Hospitality",
     "fileName": "Nieuw Beroepsbeschrijving Leidinggevende Hospitality.pdf",
@@ -1834,5 +1822,101 @@
     "sizeBytes": 262021,
     "updated": "2026-07-30",
     "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20CURRICULUM%20POSTERS%20COHORT%20238/CURRICULUM%20POSTER%20Zelfstandig%20Werkend%20Kok%20Cohort%20238.pdf"
+  },
+  {
+    "id": "bpv-info-154",
+    "title": "BPV KOMPAS Nieuwe KD HGT+ crebo 27052 nieuw",
+    "fileName": "BPV KOMPAS Nieuwe KD HGT+ crebo 27052 nieuw.pdf",
+    "category": "BPV HANDLEIDINGEN",
+    "subfolder": "BPV KOMPAS BEDIENING",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 491373,
+    "updated": "2026-08-13",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20HANDLEIDINGEN/BPV%20KOMPAS%20BEDIENING/BPV%20KOMPAS%20Nieuwe%20KD%20HGT%2B%20crebo%2027052%20nieuw.pdf"
+  },
+  {
+    "id": "bpv-info-155",
+    "title": "BPV KOMPAS Nieuwe KD HMA+ crebo 27056 nieuw",
+    "fileName": "BPV KOMPAS Nieuwe KD HMA+ crebo 27056 nieuw.pdf",
+    "category": "BPV HANDLEIDINGEN",
+    "subfolder": "BPV KOMPAS BEDIENING",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 540542,
+    "updated": "2026-08-13",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20HANDLEIDINGEN/BPV%20KOMPAS%20BEDIENING/BPV%20KOMPAS%20Nieuwe%20KD%20HMA%2B%20crebo%2027056%20nieuw.pdf"
+  },
+  {
+    "id": "bpv-info-156",
+    "title": "BPV KOMPAS Nieuwe KD HPR+ crebo 27053 nieuw",
+    "fileName": "BPV KOMPAS Nieuwe KD HPR+ crebo 27053 nieuw.pdf",
+    "category": "BPV HANDLEIDINGEN",
+    "subfolder": "BPV KOMPAS BEDIENING",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 527139,
+    "updated": "2026-08-13",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20HANDLEIDINGEN/BPV%20KOMPAS%20BEDIENING/BPV%20KOMPAS%20Nieuwe%20KD%20HPR%2B%20crebo%2027053%20nieuw.pdf"
+  },
+  {
+    "id": "bpv-info-157",
+    "title": "BPV KOMPAS Nieuwe KD GSK+ crebo 27064 nieuw",
+    "fileName": "BPV KOMPAS Nieuwe KD GSK+ crebo 27064 nieuw.pdf",
+    "category": "BPV HANDLEIDINGEN",
+    "subfolder": "BPV KOMPAS KEUKEN",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 483332,
+    "updated": "2026-08-13",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20HANDLEIDINGEN/BPV%20KOMPAS%20KEUKEN/BPV%20KOMPAS%20Nieuwe%20KD%20GSK%2B%20crebo%2027064%20nieuw.pdf"
+  },
+  {
+    "id": "bpv-info-158",
+    "title": "BPV KOMPAS Nieuwe KD KOK+ crebo 27060 nieuw",
+    "fileName": "BPV KOMPAS Nieuwe KD KOK+ crebo 27060 nieuw.pdf",
+    "category": "BPV HANDLEIDINGEN",
+    "subfolder": "BPV KOMPAS KEUKEN",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 468588,
+    "updated": "2026-08-11",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20HANDLEIDINGEN/BPV%20KOMPAS%20KEUKEN/BPV%20KOMPAS%20Nieuwe%20KD%20KOK%2B%20crebo%2027060%20nieuw.pdf"
+  },
+  {
+    "id": "bpv-info-159",
+    "title": "BPV KOMPAS Nieuwe KD LGK+ crebo 27065 nieuw",
+    "fileName": "BPV KOMPAS Nieuwe KD LGK+ crebo 27065 nieuw.pdf",
+    "category": "BPV HANDLEIDINGEN",
+    "subfolder": "BPV KOMPAS KEUKEN",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 523947,
+    "updated": "2026-08-11",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20HANDLEIDINGEN/BPV%20KOMPAS%20KEUKEN/BPV%20KOMPAS%20Nieuwe%20KD%20LGK%2B%20crebo%2027065%20nieuw.pdf"
+  },
+  {
+    "id": "bpv-info-160",
+    "title": "BPV KOMPAS Nieuwe KD ZWK+ crebo 27062 nieuw",
+    "fileName": "BPV KOMPAS Nieuwe KD ZWK+ crebo 27062 nieuw.pdf",
+    "category": "BPV HANDLEIDINGEN",
+    "subfolder": "BPV KOMPAS KEUKEN",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 490283,
+    "updated": "2026-08-11",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20HANDLEIDINGEN/BPV%20KOMPAS%20KEUKEN/BPV%20KOMPAS%20Nieuwe%20KD%20ZWK%2B%20crebo%2027062%20nieuw.pdf"
+  },
+  {
+    "id": "bpv-info-161",
+    "title": "BPV KOMPAS Nieuwe KD HON+ crebo 27059 nieuw",
+    "fileName": "BPV KOMPAS Nieuwe KD HON+ crebo 27059 nieuw.pdf",
+    "category": "BPV HANDLEIDINGEN",
+    "subfolder": "BPV KOMPAS MANAGEMENT",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 543364,
+    "updated": "2026-08-17",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20HANDLEIDINGEN/BPV%20KOMPAS%20MANAGEMENT/BPV%20KOMPAS%20Nieuwe%20KD%20HON%2B%20crebo%2027059%20nieuw.pdf"
   }
 ]
