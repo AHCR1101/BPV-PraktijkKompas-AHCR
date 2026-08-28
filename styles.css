@@ -650,7 +650,7 @@ footer {
 
 .selection-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 1fr) minmax(150px, 0.28fr);
   gap: 20px;
 }
 
@@ -4241,4 +4241,48 @@ body {
 .bpv-info-card.is-selected .bpv-info-tags span {
   background: rgba(255, 255, 255, 0.18) !important;
   color: var(--white) !important;
+}
+
+/* Mobiel: dossierkeuze blijft binnen de schermbreedte */
+@media (max-width: 620px) {
+  .start-section {
+    max-width: 100% !important;
+    overflow-x: hidden !important;
+  }
+
+  .choice-panel {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 12px !important;
+    padding: 12px !important;
+    overflow: visible !important;
+  }
+
+  .dossier-choice {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    padding: 16px 14px !important;
+  }
+
+  .dossier-choice span,
+  .dossier-choice small {
+    max-width: 100% !important;
+    white-space: normal !important;
+    overflow-wrap: anywhere !important;
+    word-break: normal !important;
+  }
+
+  .dossier-choice span {
+    font-size: 20px !important;
+    line-height: 1.18 !important;
+  }
+
+  .dossier-choice small {
+    font-size: 14px !important;
+    line-height: 1.35 !important;
+  }
 }

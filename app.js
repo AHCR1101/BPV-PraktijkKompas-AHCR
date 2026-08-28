@@ -3593,11 +3593,38 @@ function updateDossierDownloadLink() {
   dossierDownloadLink.classList.remove("is-disabled");
   dossierDownloadLink.dataset.downloadUrl = encodeURI(relativePath);
   dossierDownloadLink.disabled = false;
-  dossierDownloadLink.textContent = `Download Kwalificatiedossier ${programmeLabel(programmeSelect.value)}`;
+  dossierDownloadLink.textContent = `Download Kwalificatiedossier ${programmeSummaryLabel(programmeSelect.value)}`;
 }
 
 function programmeLabel(programme) {
   return currentLanguage === "en" ? programmeTranslations[programme] || programme : programme;
+}
+
+function programmeOptionLabel(programme) {
+  if (currentDossier !== "nieuw" || currentLanguage !== "nl") {
+    return programmeLabel(programme);
+  }
+  const dossierLabels = {
+    Keuken: {
+      Kok: "Kok | KD Kok crebo: 27060",
+      "Zelfstandig Werkend Kok": "Zelfstandig Werkend Kok | KD Zelfstandig Werkend Kok crebo: 27062",
+      "Gespecialiseerd Kok": "Gespecialiseerd Kok | KD Gespecialiseerd Kok crebo: 27064",
+      "Leidinggevende Keuken": "Leidinggevende Keuken | KD Leidinggevende Keuken crebo: 27065",
+    },
+    Bediening: {
+      "Medewerker Hospitality": "Hospitality Gastvrijheidstalent | KD Medewerker Hospitality crebo: 27052",
+      "Zelfstandig Medewerker Hospitality": "Hospitality Professional | KD Zelfstandig Medewerker Hospitality crebo: 27053",
+      "Leidinggevende Hospitality": "Hospitality Manager | KD Leidinggevende Hospitality crebo: 27056",
+    },
+    Management: {
+      "Ondernemer Hospitality": "Hospitality Ondernemer | KD Ondernemer Hospitality crebo: 27059",
+    },
+  };
+  return dossierLabels[currentDirection]?.[programme] || programmeLabel(programme);
+}
+
+function programmeSummaryLabel(programme) {
+  return programmeOptionLabel(programme).split("|")[0].trim();
 }
 
 function getYearOptions(programme) {
@@ -3725,7 +3752,7 @@ function updateDirectionView() {
 function populateProgrammes() {
   const programmes = directionProgrammes[currentDossier][currentDirection] || [];
   const currentProgramme = programmeSelect.value || programmes[0];
-  programmeSelect.innerHTML = programmes.map((programme) => `<option value="${programme}">${programmeLabel(programme)}</option>`).join("");
+  programmeSelect.innerHTML = programmes.map((programme) => `<option value="${programme}">${programmeOptionLabel(programme)}</option>`).join("");
   programmeSelect.value = programmes.includes(currentProgramme) ? currentProgramme : programmes[0];
   populateYears();
 }
@@ -3856,7 +3883,7 @@ function updateAiWorkprocessContext() {
   const metaNode = document.querySelector("#aiLinkedWorkprocessMeta");
   const tagsNode = document.querySelector("#aiLinkedWorkprocessTags");
   if (!titleNode || !metaNode || !tagsNode || !currentWorkprocess) return;
-  const programme = programmeLabel(programmeSelect.value);
+  const programme = programmeSummaryLabel(programmeSelect.value);
   const dossierLabel = dossierData[currentDossier]?.label?.[currentLanguage] || currentDossier;
   const years = getYearOptions(programmeSelect.value);
   const selectedYear = years.find((item) => item.value === yearSelect.value) || years[0];
@@ -3959,7 +3986,7 @@ function buildGptPrompt() {
   const trainer = document.querySelector("#activityTrainer")?.value.trim() || "";
   const years = getYearOptions(programmeSelect.value);
   const year = years.find((item) => item.value === yearSelect.value) || years[0];
-  const programme = programmeLabel(programmeSelect.value);
+  const programme = programmeSummaryLabel(programmeSelect.value);
   const level = getSelectedLevelLabel();
   const workprocess = currentWorkprocess ? `${currentWorkprocess.workprocessCode} ${currentWorkprocess.title}` : "Gekozen werkproces";
   const kerntaakData = currentWorkprocess ? getKerntaakData(currentWorkprocess.kerntaakKey) : null;
@@ -4113,7 +4140,7 @@ function openWorkprocessDetail(kerntaakKey, workprocessCode, title) {
   const domainLabel = directionLabels[currentDirection]?.[currentLanguage] || currentDirection;
   currentWorkprocess = { kerntaakKey, workprocessCode, title: detail.title };
 
-  const programmeName = programmeLabel(programmeSelect.value);
+  const programmeName = programmeSummaryLabel(programmeSelect.value);
   const dossierLabel = dossierData[currentDossier]?.label?.[currentLanguage] || currentDossier;
   directionView.classList.add("is-hidden");
   workprocessView.classList.remove("is-hidden");
@@ -4225,7 +4252,7 @@ function updateSelectionSummary() {
   const year = years.find((item) => item.value === yearSelect.value) || years[0];
   const dossierLabel = dossierData[currentDossier].label[currentLanguage];
   const directionLabel = directionLabels[currentDirection][currentLanguage];
-  const programme = programmeLabel(programmeSelect.value);
+  const programme = programmeSummaryLabel(programmeSelect.value);
   const yearLabel = year[currentLanguage];
   const level = currentLanguage === "en" ? year.levelEn : year.levelNl;
 
