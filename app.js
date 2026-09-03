@@ -6070,8 +6070,8 @@ const bpvInfoDocumentIndex = [
     "subfolder": "",
     "type": "PDF",
     "extension": "pdf",
-    "sizeBytes": 283986,
-    "updated": "2026-06-25",
+    "sizeBytes": 283984,
+    "updated": "2026-09-03",
     "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20STAGE-KALENDERS/BPV%20STAGEPERIODE%20KALENDER%20BOL%203e%20jaars%202627.pdf"
   },
   {
