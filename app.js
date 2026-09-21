@@ -6289,6 +6289,30 @@ const bpvInfoDocumentIndex = [
     "sizeBytes": 543364,
     "updated": "2026-08-17",
     "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20HANDLEIDINGEN/BPV%20KOMPAS%20MANAGEMENT/BPV%20KOMPAS%20Nieuwe%20KD%20HON%2B%20crebo%2027059%20nieuw.pdf"
+  },
+  {
+    "id": "bpv-info-162",
+    "title": "PBFlex_Instructie_BPV_en_praktijkopleiders_26-9",
+    "fileName": "PBFlex_Instructie_BPV_en_praktijkopleiders_26-9.pdf",
+    "category": "BPV HANDLEIDINGEN PraktijkbeoordelenFlex nieuw",
+    "subfolder": "",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 230718,
+    "updated": "2026-09-21",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20HANDLEIDINGEN%20PraktijkbeoordelenFlex%20nieuw/PBFlex_Instructie_BPV_en_praktijkopleiders_26-9.pdf"
+  },
+  {
+    "id": "bpv-info-163",
+    "title": "PBFlex_Studentinstructie_ontwikkelingsgericht_26-9",
+    "fileName": "PBFlex_Studentinstructie_ontwikkelingsgericht_26-9.pdf",
+    "category": "BPV HANDLEIDINGEN PraktijkbeoordelenFlex nieuw",
+    "subfolder": "",
+    "type": "PDF",
+    "extension": "pdf",
+    "sizeBytes": 324163,
+    "updated": "2026-09-21",
+    "url": "BPV%20INFO%20PRAKTIJKOPLEIDERS%20AHCR/BPV%20HANDLEIDINGEN%20PraktijkbeoordelenFlex%20nieuw/PBFlex_Studentinstructie_ontwikkelingsgericht_26-9.pdf"
   }
 ];
 
