@@ -10,7 +10,7 @@
     <meta name="theme-color" content="#f29400" />
     <meta name="apple-mobile-web-app-title" content="PraktijkKompas" />
     <meta name="application-name" content="BPV PraktijkKompas AHCR" />
-    <link rel="stylesheet" href="styles.css?v=20260828-mobile-dossier-buttons" />
+    <link rel="stylesheet" href="styles.css?v=20261125-planpro-startbestanden" />
   </head>
   <body>
     <header class="app-header">
@@ -351,14 +351,14 @@
           <div class="ai-builder-heading">
             <p class="eyebrow">AI ondersteuning</p>
             <h3 id="ai-builder-title">Werk Activiteit Uit Met AI</h3>
-            <p>Beschrijf kort de taak, opdracht of activiteit. BPV PlanPro AHCR werkt jouw idee uit in de structuur van het opleidingsplan. Je kunt werken vanuit het gekozen werkproces of kiezen voor een vrije activiteit waarbij de AI passende kerntaken en werkprocessen alleen als voorstel meegeeft.</p>
+            <p>Werk met BPV PlanPro AHCR in ChatGPT. Het startbestand bevat de werkinstructie en kennis voor jouw opleiding en kwalificatiedossier. De korte activiteitprompt bevat jouw invoer en de gekozen opleidingscontext.</p>
           </div>
 
           <div class="ai-workflow-strip" aria-label="AI werkroute">
-            <div><span>01</span><strong>Idee</strong><small>Beschrijf het leermoment.</small></div>
-            <div><span>02</span><strong>Context</strong><small>Werkproces en niveau staan klaar.</small></div>
-            <div><span>03</span><strong>Prompt</strong><small>Kopieer naar BPV PlanPro AHCR.</small></div>
-            <div><span>04</span><strong>Format</strong><small>Laat Excel en Word genereren.</small></div>
+            <div><span>01</span><strong>Startbestand</strong><small>Download de bijlage voor jouw opleiding.</small></div>
+            <div><span>02</span><strong>Activiteit</strong><small>Vul de activiteit en planning in.</small></div>
+            <div><span>03</span><strong>ChatGPT</strong><small>Voeg het startbestand toe en plak de prompt.</small></div>
+            <div><span>04</span><strong>Format</strong><small>Controleer de uitwerking en geef akkoord.</small></div>
           </div>
 
           <div class="linked-workprocess-card" aria-label="Gekoppeld werkproces">
@@ -385,15 +385,28 @@
 
           <div class="ai-builder-layout">
             <form class="ai-builder-form" id="aiBuilderForm">
+              <div class="ai-startfile-row">
+                <div>
+                  <strong>BPV PlanPro Startbestand</strong>
+                  <p id="aiStartfileName"></p>
+                  <small>Voeg dit bestand eenmaal als bijlage toe aan de ChatGPT-chat. Gebruik bij een andere opleiding, een ander dossier of een nieuwe chat het passende startbestand.</small>
+                  <small id="aiStartfileStatus" role="status"></small>
+                </div>
+                <a class="ai-secondary-btn" id="downloadPlanProStartfile" download>Download Startbestand (.md)</a>
+              </div>
               <label class="ai-field ai-field-wide" for="activitySuggestion">
                 <span>Ruwe suggestie taak, opdracht of activiteit</span>
                 <textarea id="activitySuggestion" rows="5" placeholder="Beschrijf kort wat de student in de praktijk gaat doen, oefenen of onderzoeken."></textarea>
               </label>
 
               <div class="ai-field-grid">
+                <label class="ai-field" for="activityCalendarYear">
+                  <span>Kalenderjaar</span>
+                  <input id="activityCalendarYear" type="number" min="1900" max="9999" step="1" required />
+                </label>
                 <label class="ai-field" for="activityWeek">
                   <span>Weeknr.</span>
-                  <input id="activityWeek" type="text" inputmode="numeric" placeholder="36" />
+                  <input id="activityWeek" type="number" min="1" max="53" step="1" placeholder="36" />
                 </label>
                 <label class="ai-field" for="activityDay">
                   <span>Dag</span>
@@ -420,17 +433,17 @@
               </label>
 
               <div class="gpt-action-row">
-                <button class="ai-action-btn" id="copyGptPrompt" type="button">Kopieer Prompt Voor GPT</button>
-                <a class="ai-action-btn gpt-link-btn" id="openBpvGpt" href="https://chatgpt.com/g/g-69106a324f748191bcac2310c75e73f2-bpv-planpro-ahcr" target="_blank" rel="noopener">Open BPV PlanPro AHCR</a>
+                <button class="ai-action-btn" id="copyGptPrompt" type="button">Kopieer Activiteitprompt</button>
+                <a class="ai-action-btn gpt-link-btn" id="openBpvGpt" href="https://chatgpt.com/" target="_blank" rel="noopener noreferrer">Open ChatGPT</a>
               </div>
             </form>
 
             <aside class="ai-output-panel" aria-live="polite">
               <div class="ai-output-head">
-                <span>GPT-voorbereiding</span>
-                <small>Vaste formatstructuur</small>
+                <span>ChatGPT-voorbereiding</span>
+                <small>BPV PlanPro AHCR</small>
               </div>
-              <div class="ai-output-empty" id="aiOutputEmpty">Vul hierboven een suggestie in, kopieer de prompt en open BPV PlanPro AHCR om de activiteit professioneel te laten uitwerken.</div>
+              <div class="ai-output-empty" id="aiOutputEmpty">Download het startbestand, voeg het toe aan ChatGPT en plak daarna de activiteitprompt. Binnen dezelfde chat kun je verder werken voor deze opleiding en dit dossier. Excel en Word zijn afhankelijk van de beschikbare bestandsfuncties in ChatGPT.</div>
               <dl class="ai-output-list is-hidden" id="aiOutputList"></dl>
               <button class="ai-secondary-btn is-hidden" id="copyAiOutput" type="button">Neem Op In Opleidingsplan</button>
             </aside>
@@ -482,7 +495,7 @@
       </aside>
     </div>
 
-    <script src="app.js?v=20261016-stagekalenders"></script>
+    <script src="app.js?v=20261125-startbestand-download-fix"></script>
   </body>
 </html>
 

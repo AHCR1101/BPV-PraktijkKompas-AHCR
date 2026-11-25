@@ -3878,7 +3878,82 @@ function contextItemsHtml(items) {
     .join("");
 }
 
+function getPlanProStartfile() {
+  const prefix = currentDossier === "nieuw" ? "Nieuw" : "Oud";
+  const programmeSlug = programmeSelect.value.replace(/[^a-zA-Z0-9]+/g, "-").replace(/^-|-$/g, "");
+  const fileName = `BPV-PlanPro-${prefix}-KD-${programmeSlug}.md`;
+  return { fileName, url: `md%20bestanden/${encodeURIComponent(fileName)}` };
+}
+
+let planProDownloadBundlePromise = null;
+
+function loadPlanProDownloadBundle() {
+  if (window.planProStartfileContents) return Promise.resolve(window.planProStartfileContents);
+  if (!planProDownloadBundlePromise) {
+    planProDownloadBundlePromise = new Promise((resolve, reject) => {
+      const script = document.createElement("script");
+      script.src = "md%20bestanden/planpro-startbestanden-data.js?v=20261125-download";
+      script.onload = () => {
+        if (window.planProStartfileContents) resolve(window.planProStartfileContents);
+        else {
+          planProDownloadBundlePromise = null;
+          script.remove();
+          reject(new Error("Startbestanden ontbreken"));
+        }
+      };
+      script.onerror = () => {
+        planProDownloadBundlePromise = null;
+        script.remove();
+        reject(new Error("Startbestanden konden niet worden geladen"));
+      };
+      document.head.appendChild(script);
+    });
+  }
+  return planProDownloadBundlePromise;
+}
+
+async function downloadPlanProStartfile(event) {
+  event.preventDefault();
+  const button = event.currentTarget;
+  if (button.getAttribute("aria-busy") === "true") return;
+  const startfile = getPlanProStartfile();
+  const status = document.querySelector("#aiStartfileStatus");
+  button.setAttribute("aria-busy", "true");
+  if (status) status.textContent = "Download voorbereiden...";
+  try {
+    const contents = await loadPlanProDownloadBundle();
+    const text = contents[startfile.fileName];
+    if (typeof text !== "string" || !text.length) throw new Error("Startbestand ontbreekt");
+    // A Blob forces a file download instead of navigating to the Markdown text.
+    const url = URL.createObjectURL(new Blob([text], { type: "application/octet-stream" }));
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = startfile.fileName;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    window.setTimeout(() => URL.revokeObjectURL(url), 60000);
+    if (status) status.textContent = `Download aangeboden: ${startfile.fileName}`;
+  } catch (_) {
+    if (status) status.textContent = "Download niet gelukt. Controleer of de map md bestanden volledig bij de site staat en probeer opnieuw.";
+  } finally {
+    button.removeAttribute("aria-busy");
+  }
+}
+
 function updateAiWorkprocessContext() {
+  const startfile = getPlanProStartfile();
+  const download = document.querySelector("#downloadPlanProStartfile");
+  const startfileName = document.querySelector("#aiStartfileName");
+  if (download) {
+    download.href = `${startfile.url}?v=20261125`;
+    download.download = startfile.fileName;
+  }
+  if (startfileName) {
+    startfileName.textContent = `${programmeSummaryLabel(programmeSelect.value)} | ${dossierData[currentDossier]?.label?.nl || currentDossier}`;
+  }
+  const startfileStatus = document.querySelector("#aiStartfileStatus");
+  if (startfileStatus) startfileStatus.textContent = "";
   const titleNode = document.querySelector("#aiLinkedWorkprocessTitle");
   const metaNode = document.querySelector("#aiLinkedWorkprocessMeta");
   const tagsNode = document.querySelector("#aiLinkedWorkprocessTags");
@@ -3901,17 +3976,17 @@ function shortenText(text, maxLength = 190) {
   if (value.length <= maxLength) return value;
   return `${value.slice(0, maxLength).trim()}...`;
 }
-function getTrainingPlanYear() {
-  const selectedYear = Number(yearSelect?.value || 1);
-  const now = new Date();
-  return selectedYear === 1 ? now.getFullYear() : now.getFullYear() + selectedYear - 1;
-}
-
 function getIsoDateFromWeek(year, week, dayIndex) {
-  const simple = new Date(year, 0, 1 + (week - 1) * 7);
-  const dayOfWeek = simple.getDay() || 7;
-  const monday = new Date(simple);
-  monday.setDate(simple.getDate() - dayOfWeek + 1);
+  if (!Number.isInteger(year) || year < 1900 || year > 9999 ||
+      !Number.isInteger(week) || week < 1 || week > 53 ||
+      !Number.isInteger(dayIndex) || dayIndex < 1 || dayIndex > 7) return new Date(NaN);
+  // ISO week 1 contains January 4; its Thursday determines the ISO year.
+  const january4 = new Date(year, 0, 4, 12);
+  const monday = new Date(january4);
+  monday.setDate(january4.getDate() - (january4.getDay() || 7) + 1 + (week - 1) * 7);
+  const thursday = new Date(monday);
+  thursday.setDate(monday.getDate() + 3);
+  if (thursday.getFullYear() !== year) return new Date(NaN);
   const target = new Date(monday);
   target.setDate(monday.getDate() + dayIndex - 1);
   return target;
@@ -3923,24 +3998,32 @@ function formatNlDate(date) {
 }
 
 function updateActivityDate() {
+  const calendarYearInput = document.querySelector("#activityCalendarYear");
   const weekInput = document.querySelector("#activityWeek");
   const dayInput = document.querySelector("#activityDay");
   const dateInput = document.querySelector("#activityDate");
-  if (!weekInput || !dayInput || !dateInput) return;
+  if (!calendarYearInput || !weekInput || !dayInput || !dateInput) return;
+  const calendarYear = Number(calendarYearInput.value);
   const week = Number(String(weekInput.value || "").trim());
+  weekInput.setCustomValidity("");
+  const weekStart = getIsoDateFromWeek(calendarYear, week, 1);
+  if (weekInput.value && calendarYearInput.validity.valid && Number.isNaN(weekStart.getTime())) {
+    weekInput.setCustomValidity(`Kalenderjaar ${calendarYear} heeft geen week ${week}.`);
+  }
   const dayMap = { maandag: 1, dinsdag: 2, woensdag: 3, donderdag: 4, vrijdag: 5, zaterdag: 6, zondag: 7 };
-  const dayIndex = dayMap[String(dayInput.value || "").toLowerCase()];
-  if (!week || week < 1 || week > 53 || !dayIndex) {
+  const dayIndex = dayMap[String(dayInput.value || "").trim().toLowerCase()];
+  if (!dayIndex) {
     dateInput.value = "";
     return;
   }
-  dateInput.value = formatNlDate(getIsoDateFromWeek(getTrainingPlanYear(), week, dayIndex));
+  dateInput.value = formatNlDate(getIsoDateFromWeek(calendarYear, week, dayIndex));
 }
 function clearAiBuilderFields() {
   ["#activitySuggestion", "#activityWeek", "#activityDay", "#activityDate", "#activityTime", "#activityContext", "#activityTrainer"].forEach((selector) => {
     const field = document.querySelector(selector);
     if (field) field.value = "";
   });
+  document.querySelector("#activityWeek")?.setCustomValidity("");
 }
 
 function resetAiBuilder() {
@@ -3975,139 +4058,57 @@ function getActivityMode() {
 
 function buildGptPrompt() {
   updateActivityDate();
-  const activityMode = getActivityMode();
-  const isFreeActivity = activityMode === "free";
-  const suggestion = document.querySelector("#activitySuggestion")?.value.trim() || "";
-  const week = document.querySelector("#activityWeek")?.value.trim() || "";
-  const day = document.querySelector("#activityDay")?.value.trim() || "";
-  const date = document.querySelector("#activityDate")?.value || "";
-  const time = document.querySelector("#activityTime")?.value.trim() || "";
-  const context = document.querySelector("#activityContext")?.value.trim() || "";
-  const trainer = document.querySelector("#activityTrainer")?.value.trim() || "";
+  const startfile = getPlanProStartfile();
+  const isFreeActivity = getActivityMode() === "free";
+  const value = (selector) => document.querySelector(selector)?.value.trim() || "Aan te vullen door praktijkopleider";
   const years = getYearOptions(programmeSelect.value);
   const year = years.find((item) => item.value === yearSelect.value) || years[0];
-  const programme = programmeSummaryLabel(programmeSelect.value);
-  const level = getSelectedLevelLabel();
-  const workprocess = currentWorkprocess ? `${currentWorkprocess.workprocessCode} ${currentWorkprocess.title}` : "Gekozen werkproces";
-  const kerntaakData = currentWorkprocess ? getKerntaakData(currentWorkprocess.kerntaakKey) : null;
-  const kerntaak = kerntaakData ? `${kerntaakData.code} ${kerntaakData.titel}` : "Gekozen kerntaak";
-  const detail = currentWorkprocess
-    ? getWorkprocessDetail(currentWorkprocess.kerntaakKey, currentWorkprocess.workprocessCode, currentWorkprocess.title)
-    : { omschrijving: "", resultaat: "", gedrag: "" };
-  const routeInstruction = isFreeActivity
-    ? `De praktijkopleider kiest bewust voor Vrije Activiteit Uitwerken. De activiteit van de praktijkopleider is leidend. Werk de activiteit professioneel uit vanuit de ruwe suggestie, opleiding, leerjaar, niveau en praktijksituatie. Gebruik het geopende werkproces alleen als achtergrondcontext. Geef bij Kerntaken/Werkprocessen maximaal drie passende koppelsuggesties met Oud of Nieuw Kwalificatiedossier, kerntaak en werkproces. Benoem expliciet dat dit voorstellen zijn en dat de praktijkopleider de koppeling controleert voordat de activiteit in het opleidingsplan wordt opgenomen.`
-    : `De praktijkopleider kiest bewust voor Vanuit Gekozen Werkproces. Stem de uitwerking direct af op het geselecteerde werkproces, de omschrijving, het resultaat en het gedrag uit het Kwalificatiedossier.`;
-  const workprocessContext = isFreeActivity
-    ? `Mogelijke achtergrondcontext vanuit de geopende pagina:
-Kerntaak: ${kerntaak}
-Werkproces: ${workprocess}
+  const kerntaak = currentWorkprocess ? getKerntaakData(currentWorkprocess.kerntaakKey) : null;
+  const workprocess = currentWorkprocess ? `${currentWorkprocess.workprocessCode} ${currentWorkprocess.title}` : "Niet geselecteerd";
+  const contextLabel = isFreeActivity ? "Alleen achtergrondcontext, geen verplichte koppeling" : "Gekozen koppeling";
+  return `Gebruik de bijlage "${startfile.fileName}" als werkinstructie en inhoudelijke bron. Ontbreekt de bijlage of kun je deze niet lezen, vraag dan eerst om het juiste startbestand.
 
-Omschrijving werkproces:
-${detail.omschrijving || "Niet beschikbaar"}
+Manier van uitwerken: ${isFreeActivity ? "Vrije Activiteit Uitwerken" : "Vanuit Gekozen Werkproces"}.
+Kwalificatiedossier: ${dossierData[currentDossier]?.label?.nl || currentDossier}.
+Domein: ${directionLabels[currentDirection]?.nl || currentDirection}.
+Opleiding: ${programmeSummaryLabel(programmeSelect.value)} (KD ${programmeSelect.value}).
+Leerjaar: ${year?.nl || "Aan te vullen"}.
+Ontwikkelniveau: ${getSelectedLevelLabel()}.
+${contextLabel}:
+Kerntaak: ${kerntaak ? `${kerntaak.code} ${kerntaak.titel}` : "Niet geselecteerd"}.
+Werkproces: ${workprocess}.
+${isFreeActivity ? "De activiteit is leidend. Geef maximaal drie passende dossierkoppelingen als voorstel, te controleren door de praktijkopleider." : "Stem de activiteit af op de omschrijving, het resultaat en het gedrag van dit werkproces in de bijlage."}
 
-Resultaat werkproces:
-${detail.resultaat || "Niet beschikbaar"}
+Activiteit:
+${value("#activitySuggestion")}
 
-Gedrag werkproces:
-${detail.gedrag || "Niet beschikbaar"}`
-    : `Kerntaak: ${kerntaak}
-Werkproces: ${workprocess}
+Planning:
+Kalenderjaar: ${value("#activityCalendarYear")}
+Weeknummer: ${value("#activityWeek")}
+Dag: ${value("#activityDay")}
+Datum: ${value("#activityDate")}
+Benodigde tijd: ${value("#activityTime")}
+Praktijkopleider: ${value("#activityTrainer")}
+Extra context: ${document.querySelector("#activityContext")?.value.trim() || "Geen extra context ingevuld"}
 
-Omschrijving werkproces:
-${detail.omschrijving || "Niet beschikbaar"}
-
-Resultaat werkproces:
-${detail.resultaat || "Niet beschikbaar"}
-
-Gedrag werkproces:
-${detail.gedrag || "Niet beschikbaar"}`;
-
-  return `Ik wil een taak/opdracht/activiteit laten uitwerken volgens het format Opleidingsplan van BPV PraktijkKompas AHCR.
-
-VERPLICHTE MASTERINSTRUCTIE
-Werk volgens de vaste kwaliteitsstandaard uit INSTRUCTIES/bpv-planpro-master-instructie.md, gebaseerd op BPV PlanPro AHCR - Master Instructie. Deze masterinstructie is leidend voor rol, SOP-workflow, outputformat, niveau-afstemming, anti-hallucinatieregels en de vervolgstap na Ja/Nee.
-
-KERNREGELS DIE JE ALTIJD MOET HANDHAVEN
-- Gebruik onderstaande context als leidend kader.
-- Gebruik het Kwalificatiedossier als inhoudelijk kader.
-- Gebruik waar beschikbaar ook de bronnen in BPV PlanPro AHCR met BPV-opdrachten, My Signature-opdrachten en takenboeken, zoals BPV OPDRACHTEN KOK, ZWK, GSK, LGK, GHV, ZWG, LGB, MHO, MOH, BPV Opdracht My Signature ZWK/GSK/LGK NIEUW en BPV Takenboek KOK/ZWK/GSK/LGK.
-- Gebruik deze bronnen om suggesties, voorbeelden, benodigdheden, voorbereiding en criteria te verrijken, maar laat het gekozen Kwalificatiedossier en werkproces leidend blijven.
-- Doe geen harde aannames over het leerbedrijf, student, materialen, systemen, menu's, roosters of beoordelingsafspraken.
-- Formuleer ontbrekende of bedrijfsspecifieke zaken als suggestie, voorbeeld, afstempunt of "Aan te vullen".
-- Bij Vanuit Gekozen Werkproces gebruik je het gekozen werkproces als harde koppeling.
-- Bij Kerntaken/Werkprocessen vermeld je altijd of het gaat om het Oud Kwalificatiedossier of Nieuw Kwalificatiedossier.
-- Houd Kerntaken/Werkprocessen kort: noem alleen Kwalificatiedossier, kerntaak en werkproces. Voeg daar geen extra omschrijving, resultaat, criteria of activiteitstekst toe.
-- Bij Vrije Activiteit Uitwerken is de activiteit leidend; geef maximaal drie passende kerntaken/werkprocessen als voorstel en laat de praktijkopleider dit controleren.
-- Verwerk het niveau Basis, Gevorderd of Expert zichtbaar in leerdoel, uitvoering, begeleiding en criteria.
-- Schrijf Nederlands, professioneel, kort, concreet en direct bruikbaar in het opleidingsplan.
-- Toon de eerste uitwerking altijd als overzicht onder elkaar en nooit direct als tabel.
-- Sluit iedere eerste uitwerking exact af met: "Ben je content met deze uitwerking?"
-- Bij Nee, Niet helemaal, Pas aan, Wijzigen of Verbeteren genereer je geen bestanden en vraag je eerst wat aangepast moet worden.
-- Bij Ja, Akkoord, Prima, Correct of Goed toon je eerst de definitieve activiteit als tabel en genereer je daarna direct de downloadbestanden.
-
-Manier van uitwerken: ${isFreeActivity ? "Vrije Activiteit Uitwerken" : "Vanuit Gekozen Werkproces"}
-${routeInstruction}
-
-Kwalificatiedossier: ${dossierData[currentDossier]?.label?.nl || currentDossier}
-Domein: ${directionLabels[currentDirection]?.nl || currentDirection}
-Opleiding: ${programme}
-Leerjaar: ${year?.nl || ""}
-Niveau: ${level}
-${workprocessContext}
-
-Ruwe suggestie praktijkopleider:
-${suggestion || "Aan te vullen door praktijkopleider"}
-
-Planning en context:
-Weeknummer: ${week || "Aan te vullen"}
-Dag: ${day || "Aan te vullen"}
-Datum: ${date || "Aan te vullen"}
-Tijd: ${time || "Aan te vullen"}
-Praktijkopleider: ${trainer || "Naam praktijkopleider"}
-Extra context/aandachtspunt: ${context || "Geen extra context ingevuld"}
-
-Werk de activiteit uit in exact deze onderdelen:
-1. Weeknummer
-2. Dag
-3. Datum
-4. Taak/Opdracht/Activiteit
-5. Leerdoel
-6. Kerntaken/Werkprocessen
-7. Op welke Manier/Wijze
-8. Benodigdheden
-9. Voorbereidingen
-10. Praktijkopleider
-11. Benodigde Tijd
-12. Gewenste Resultaat/Criteria
-
-${isFreeActivity ? "Neem bij onderdeel 6 maximaal drie passende kerntaken/werkprocessen op als voorstel. Vermeld per voorstel het Oud of Nieuw Kwalificatiedossier, de kerntaak en het werkproces. Zet duidelijk erbij: Voorstel - controleren door praktijkopleider. Houd dit onderdeel kort en voeg geen extra resultaat- of activiteitstekst toe." : "Neem bij onderdeel 6 het gekozen werkproces als uitgangspunt. Vermeld het Kwalificatiedossier, de kerntaak en het werkproces kort en concreet. Voeg bij dit onderdeel geen extra omschrijving, resultaat, criteria of activiteitstekst toe."}
-
-Sluit daarna altijd af met deze controlevraag:
-"Ben je content met deze uitwerking?"
-
-Als de praktijkopleider "Nee", "Niet helemaal", "Pas aan", "Wijzigen" of "Verbeteren" antwoordt, genereer dan geen bestanden. Vraag concreet wat er moet worden aangepast. Denk aan niveau, leerdoel, werkproces, uitvoering, criteria, tijd, begeleiding, benodigdheden, voorbereidingen, toon of bedrijfssituatie. Toon daarna opnieuw de uitwerking als overzicht onder elkaar.
-
-Als de praktijkopleider "Ja", "Akkoord", "Prima", "Correct" of "Goed" antwoordt, toon dan eerst de definitieve activiteit als tabel zichtbaar in de chat. Maak daarna direct standaard een echt downloadbaar Excel-bestand en plaats de downloadlink direct onder de tabel. Vraag niet nogmaals om bevestiging en geef niet alleen een kopieerbaar overzicht.
-
-Maak een Excel-bestand (.xlsx) met ��n uitgewerkte activiteit op ��n rij en exact deze kolommen:
-Weeknummer | Dag | Datum | Taak/Opdracht/Activiteit | Leerdoel | Kerntaken/Werkprocessen | Op welke Manier/Wijze | Benodigdheden | Voorbereidingen | Praktijkopleider | Benodigde Tijd | Gewenste Resultaat/Criteria
-
-Gebruik de ingevulde uitwerking als inhoud van de rij. Geef het bestand een duidelijke naam, bijvoorbeeld: opleidingsplan_activiteit.xlsx. Als .xlsx technisch niet mogelijk is, maak dan een Excel-geschikt .csv-bestand met dezelfde kolommen en meld dit kort.
-
-Maak daarnaast, als dit technisch mogelijk is, ook een Word-bestand (.docx) en plaats de downloadlink direct onder de Excel-downloadlink. Maak van Word een professioneel, printvriendelijk document in liggende pagina-indeling met smalle marges en twee kolommen: kolom 1 Veldnaam en kolom 2 Inhoud. Gebruik vetgedrukte veldnamen, tekstterugloop en geen zichtbare tabelranden. Gebruik dezelfde veldvolgorde als Excel.`;
+Gebruik de twaalf vaste onderdelen en de akkoordprocedure uit de bijlage. Maak geen bestanden voor akkoord.`;
 }
 
 async function copyPromptForGpt(event) {
   if (event) event.preventDefault();
+  updateActivityDate();
+  const form = document.querySelector("#aiBuilderForm");
+  if (form && !form.reportValidity()) return;
   const prompt = buildGptPrompt();
   const outputEmpty = document.querySelector("#aiOutputEmpty");
   const outputList = document.querySelector("#aiOutputList");
   const copyButton = document.querySelector("#copyGptPrompt");
   if (outputList) {
     outputList.innerHTML = `
-      <div class="ai-output-row"><dt>Promptstatus</dt><dd>De prompt is klaargezet voor BPV PlanPro AHCR.</dd></div>
+      <div class="ai-output-row"><dt>Promptstatus</dt><dd>De korte activiteitprompt staat klaar voor ChatGPT.</dd></div>
+      <div class="ai-output-row"><dt>Bijlage</dt><dd>${escapeHtml(getPlanProStartfile().fileName)}</dd></div>
       <div class="ai-output-row"><dt>Route</dt><dd>${getActivityMode() === "free" ? "Vrije Activiteit Uitwerken" : "Vanuit Gekozen Werkproces"}</dd></div>
-      <div class="ai-output-row"><dt>Volgende stap</dt><dd>Open BPV PlanPro AHCR en plak de prompt in de chat.</dd></div>
+      <div class="ai-output-row"><dt>Volgende stap</dt><dd>Open ChatGPT, voeg het startbestand toe als dit nog niet in de chat staat en plak de prompt.</dd></div>
     `;
     outputList.classList.remove("is-hidden");
   }
@@ -4116,12 +4117,12 @@ async function copyPromptForGpt(event) {
     await navigator.clipboard.writeText(prompt);
     if (copyButton) copyButton.textContent = "Prompt Gekopieerd";
   } catch (_) {
-    window.prompt("Kopieer deze prompt voor BPV PlanPro AHCR:", prompt);
+    window.prompt("Kopieer deze activiteitprompt voor ChatGPT:", prompt);
     if (copyButton) copyButton.textContent = "Prompt Klaargezet";
   }
   clearAiBuilderFields();
   window.setTimeout(() => {
-    if (copyButton) copyButton.textContent = "Kopieer Prompt Voor GPT";
+    if (copyButton) copyButton.textContent = "Kopieer Activiteitprompt";
   }, 1800);
 }
 function showDirectionView() {
@@ -4341,7 +4342,11 @@ const aiBuilderForm = document.querySelector("#aiBuilderForm");
 if (aiBuilderForm) aiBuilderForm.addEventListener("submit", copyPromptForGpt);
 const copyGptPrompt = document.querySelector("#copyGptPrompt");
 if (copyGptPrompt) copyGptPrompt.addEventListener("click", copyPromptForGpt);
-["#activityWeek", "#activityDay"].forEach((selector) => {
+const planProDownloadButton = document.querySelector("#downloadPlanProStartfile");
+if (planProDownloadButton) planProDownloadButton.addEventListener("click", downloadPlanProStartfile);
+const activityCalendarYear = document.querySelector("#activityCalendarYear");
+if (activityCalendarYear) activityCalendarYear.value = String(new Date().getFullYear());
+["#activityCalendarYear", "#activityWeek", "#activityDay"].forEach((selector) => {
   const field = document.querySelector(selector);
   if (field) field.addEventListener("input", updateActivityDate);
   if (field) field.addEventListener("change", updateActivityDate);

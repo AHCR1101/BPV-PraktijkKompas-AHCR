@@ -1830,7 +1830,7 @@ footer {
 
 .ai-field-grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 12px;
 }
 
@@ -2015,6 +2015,38 @@ footer {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
+}
+
+.ai-startfile-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.ai-startfile-row > div {
+  flex: 1 1 260px;
+  min-width: 0;
+}
+
+.ai-startfile-row p {
+  margin: 5px 0;
+  overflow-wrap: anywhere;
+}
+
+.ai-startfile-row small {
+  display: block;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.ai-startfile-row .ai-secondary-btn {
+  max-width: 100%;
+  white-space: normal;
+  text-align: center;
+  text-decoration: none;
 }
 
 .gpt-link-btn {
